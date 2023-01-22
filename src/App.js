@@ -1,3 +1,4 @@
+import Register from "./components/Register";
 import Login from "./components/Login";
 import { ThemeProvider } from "@mui/material/styles";
 import "./App.css";
@@ -8,6 +9,7 @@ import {
   Navigate,
 } from "react-router-dom";
 import { theme } from "./theme";
+import ForgotPassword from "./components/ForgotPassword";
 
 
 function App() {
@@ -18,6 +20,8 @@ function App() {
         <Router>
             {
               <Routes>
+                <Route path="/password-reset" element={<ForgotPassword />} />
+                <Route path="/register" element={<Register />} />
                 <Route path="/login" element={<Login />} />
                 <Route path="*" element={<Navigate to="/login" replace />} />
               </Routes>
