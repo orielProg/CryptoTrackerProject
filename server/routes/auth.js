@@ -3,8 +3,10 @@ const bcrypt = require("bcryptjs");
 const User = require("../model/User");
 const {
   registerSchema,
+  loginSchema,
 } = require("../validation");
-const crypto = require("crypto");
+
+const { getTokens} = require("../jwt_helper/jwt_functions");
 
 const createUser = async (req) => {
   console.log(req);
@@ -81,5 +83,49 @@ router.post("/register", async (req, res) => {
   await createUser(req);
   return res.status(200).send("User created");
 });
+
+router.post("/login", async (req, res) => {
+  const { error } = loginSchema.validate(req.body);
+
+  if (error) return res.status(400).send(error.details[0].message);
+
+  const user = await User.findOne({ email: req.body.email });
+  if (!user) return res.status(400).send("Email or password are wrong");
+  const validPass = await bcrypt.compare(req.body.password, user.password);
+
+  if (!validPass) return res.status(400).send("Wrong password");
+
+  await getTokens(req, res, user._id);
+  res.status(200).send("Logged");
+});
+
+router.post("/google-login", async (req, res) => {
+  const googleID = req.body.googleID;
+  const googleUser = await User.findOne({ googleID });
+  //the user is registered
+  if (googleUser) {
+    console.log("the user already registered via google");
+    const _id = googleUser._id;
+    await getTokens(req, res, _id);
+    res.status(200).send("Logged");
+  } else {
+    const email = req.body.email;
+    const emailExist = await User.findOne({ email });
+    if (emailExist) {
+      const _id = emailExist._id;
+      getTokens(req, res, _id);
+      res.status(200).send("Logged");
+    }
+    const username = "google" + googleID;
+    const password = Math.random().toString(36).slice(2);
+    req.body.password = password;
+    req.body.username = username;
+    req.body.googleID = googleID;
+    const _id = await createUser(req, res);
+    await getTokens(req, res, _id);
+    res.status(200).send("Logged");
+  }
+});
+
 
 module.exports = router;
