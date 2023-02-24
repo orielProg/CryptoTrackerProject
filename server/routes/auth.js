@@ -5,8 +5,11 @@ const {
   registerSchema,
   loginSchema,
 } = require("../validation");
+const crypto = require("crypto");
 
 const { getTokens} = require("../jwt_helper/jwt_functions");
+const Token = require("../model/Token");
+const sendEmail = require("../emailService/sendEmail");
 
 const createUser = async (req) => {
   console.log(req);
@@ -124,6 +127,68 @@ router.post("/google-login", async (req, res) => {
     const _id = await createUser(req, res);
     await getTokens(req, res, _id);
     res.status(200).send("Logged");
+  }
+});
+
+router.post("/password-reset", async (req, res) => {
+  const email = req.body.email;
+  const user = await User.findOne({ email });
+  if (!user) {
+    return res.status(404).send({
+      success: false,
+      message: "The email does not exists on the system",
+    });
+  }
+  const _id = user._id;
+  let token = await Token.findOne({ email });
+  try {
+    if (!token) {
+      token = crypto.randomBytes(32).toString("hex");
+      const tokenObj = new Token({
+        email,
+        token,
+      });
+      await tokenObj.save();
+    } else token = token.token;
+    const link =
+      "" + process.env.BASE_URL + "/password-reset/" + _id + "/" + token;
+    //need to make sendEmail function implem
+    await sendEmail(email, "Password reset to CryptoTracker", link);
+    return res.status(200).send({ success: true });
+  } catch (error) {
+    return res
+      .status(400)
+      .send({ success: false, message: "Error has been occurred" });
+  }
+});
+
+router.get("/password-reset/:userID/:token", async (req, res) => {
+  try {
+    const token = req.params.token;
+    const userID = req.params.userID;
+    console.log(token, userID);
+    const user = await User.findOne({ _id: userID });
+    console.log(user);
+    if (!user) {
+      console.log("does not exists");
+      return res
+        .status(404)
+        .send({ success: false, message: "The link has expired" });
+    }
+    const email = user.email;
+    const tokenObject = await Token.findOne({ email });
+    console.log(tokenObject);
+    if (!tokenObject || tokenObject.token !== token) {
+      console.log("does not exists");
+      return res
+        .status(404)
+        .send({ success: false, message: "The link has expired" });
+    }
+    return res.status(200).send({ success: true });
+  } catch (error) {
+    return res
+      .status(400)
+      .send({ success: false, message: "Error has been occurred" });
   }
 });
 
