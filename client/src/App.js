@@ -10,13 +10,15 @@ import {
 } from "react-router-dom";
 import { theme } from "./theme";
 import ForgotPassword from "./components/ForgotPassword";
+import { createContext } from "react";
+
+export const LoggedInContext = createContext();
+
 
 
 function App() {
-
   return (
     <ThemeProvider theme={theme}>
-      
         <Router>
             {
               <Routes>
