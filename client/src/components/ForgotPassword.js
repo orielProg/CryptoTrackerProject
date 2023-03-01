@@ -5,21 +5,35 @@ import {
   CardContent,
   TextField,
   Divider,
+  Button,
+  Link,
+  Typography,
   IconButton,
 } from "@mui/material";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import { useNavigate } from "react-router-dom";
 import { useRef,useState } from "react";
+import axios from "axios";
+import { useSnackbar } from "notistack";
 import LoadingButton from "@mui/lab/LoadingButton";
 
 const ForgotPassword = (props) => {
   const navigate = useNavigate();
   const [loading,setLoading] = useState(false);
   const emailRef = useRef();
+  const { enqueueSnackbar } = useSnackbar();
 
   const submitHandler = async () => {
       setLoading(true);
     const email = emailRef.current.value;
+    try {
+      await axios.post("/password-reset", { email });
+      enqueueSnackbar("Recovery email sent", { variant: "success" });
+    } catch (error) {
+      if (error.response && error.response.data)
+        enqueueSnackbar(error.response.data.message, { variant: "error" });
+      else enqueueSnackbar(error.message, { variant: "error" });
+    }
     setLoading(false);
   };
   const backHandler = () => {

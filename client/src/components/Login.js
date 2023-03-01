@@ -1,10 +1,13 @@
-import { Grid, CardContent, IconButton } from "@mui/material";
+import { Paper, Grid, CardContent, IconButton } from "@mui/material";
 import { Typography, Link } from "@mui/material";
 import GoogleLogin from "react-google-login";
 import { Divider, Card, CardHeader, Button } from "@mui/material";
+import LoadingButton from "@mui/lab/LoadingButton";
 import { TextField } from "@mui/material";
-import { useState, useRef } from "react";
-
+import { useState, useRef, useContext } from "react";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
+import { LoggedInContext } from "../App";
 import GoogleIcon from "@mui/icons-material/Google";
 import {
   emailSchema,
@@ -23,6 +26,8 @@ const Login = (props) => {
   const [passwordFeedback, setPasswordFeedback] = useState(
     initialValidationState
   );
+  const navigate = useNavigate();
+  const context = useContext(LoggedInContext);
 
   const submitHandler = async (event) => {
     event.preventDefault();
@@ -30,11 +35,26 @@ const Login = (props) => {
     setLoading(true);
     const email = emailRef.current.value;
     const password = passwordRef.current.value;
+    await axios
+      .post("/login", {
+        email,
+        password,
+      })
+      .then(() => context.setLoggedIn(true))
+      .catch((err) => alert(err.response.data));
     setLoading(false);
   };
 
   const googleLogin = async (res) => {
     console.log(res);
+    await axios
+      .post("/google-login", {
+        googleID: res.googleId,
+        email: res.profileObj.email,
+        picture: res.profileObj.imageUrl,
+      })
+      .then(() => context.setLoggedIn(true))
+      .catch((err) => alert(err.response.data));
   };
 
   return (

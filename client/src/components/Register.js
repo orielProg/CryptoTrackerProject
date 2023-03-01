@@ -1,9 +1,12 @@
 import Grid from "@mui/material/Grid";
-import {Typography } from "@mui/material";
+import { Paper, Typography } from "@mui/material";
 import { Button } from "@mui/material";
+import GoogleIcon from "@mui/icons-material/Google";
 import { Divider } from "@mui/material";
 import { TextField, Card, CardHeader, CardContent, Link } from "@mui/material";
 import { useRef, useState } from "react";
+import LoadingButton from "@mui/lab/LoadingButton";
+import { GoogleLogin } from "react-google-login";
 import {
   emailSchema,
   passwordSchema,
@@ -11,6 +14,8 @@ import {
   initialValidationState,
   usernameSchema,
 } from "../validation";
+
+import axios from "axios";
 
 const Register = (props) => {
   const [loading, setLoading] = useState(false);
@@ -46,6 +51,15 @@ const Register = (props) => {
       setLoading(false);
       return;
     }
+    await axios
+      .post("/register", {
+        username,
+        email,
+        password,
+        confirmPassword,
+      })
+      .then((res) => console.log(res))
+      .catch((err) => alert(err.response.data));
     setLoading(false);
   };
 
