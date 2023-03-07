@@ -152,7 +152,6 @@ router.post("/password-reset", async (req, res) => {
     } else token = token.token;
     const link =
       "" + process.env.BASE_URL + "/password-reset/" + _id + "/" + token;
-    //need to make sendEmail function implem
     await sendEmail(email, "Password reset to CryptoTracker", link);
     return res.status(200).send({ success: true });
   } catch (error) {
@@ -189,6 +188,48 @@ router.get("/password-reset/:userID/:token", async (req, res) => {
     return res
       .status(400)
       .send({ success: false, message: "Error has been occurred" });
+  }
+});
+
+router.post("/change-password", async (req, res) => {
+  const password = req.body.password;
+  const confirmPassword = req.body.confirmPassword;
+  const { error } = changePasswordSchema.validate({
+    password,
+    confirmPassword,
+  });
+  if (error) {
+    return res
+      .status(400)
+      .send({ success: false, message: error.details[0].message });
+  }
+  const token = req.body.token;
+  const _id = req.body.userID;
+  const user = await User.findOne({ _id }, { email: 1 });
+  if (!user) {
+    return res
+      .status(400)
+      .send({ success: false, message: "Error : User not found" });
+  }
+  const email = user.email;
+  const tokenObject = await Token.findOne({ email });
+  if (!tokenObject || tokenObject.token !== token) {
+    return res
+      .status(400)
+      .send({ success: false, message: "Error : Token expired" });
+  }
+  const salt = await bcrypt.genSalt(10);
+  const hashedPass = await bcrypt.hash(password, salt);
+  try {
+    await User.findOneAndUpdate({ _id }, { password: hashedPass });
+    await Token.findOneAndDelete({email});
+    return res
+      .status(200)
+      .send({ success: true, message: "Password updated successfully" });
+  } catch (error) {
+    return res
+      .status(400)
+      .send({ success: false, message: "Could not update password" });
   }
 });
 
