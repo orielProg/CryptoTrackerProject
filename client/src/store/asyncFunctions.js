@@ -89,3 +89,22 @@ export const getTokens = (page, itemsPerPage, rowCount, sortingModel) => {
   };
 };
 
+export const checkIfCanBeCharted = (contractAddress,infoPopUp) => {
+  return (dispatch) => {
+    if (
+      !contractAddress.startsWith("0x") &&
+      contractAddress !== "eth" &&
+      contractAddress !== "btc"
+    ) {
+      infoPopUp();
+      return;
+    }
+    return axios
+      .post("/app/check-contract-address", { contractAddress })
+      .then((data) =>
+        dispatch(tokensActions.setTokenInfo({ ...data.data, contractAddress }))
+      ).catch(error => {
+        infoPopUp();
+      })
+  };
+};

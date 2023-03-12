@@ -5,6 +5,8 @@ const { db } = require("../model/User");
 const { default: mongoose } = require("mongoose");
 const { deleteTokens } = require("../jwt_helper/jwt_functions");
 const router = require("express").Router();
+const CoinGecko = require("coingecko-api");
+const CoinGeckoClient = new CoinGecko();
 
 
 const getSortingPipeline = (sortingModel) => {
@@ -105,6 +107,62 @@ router.post("/logout", authToken, async (req, res) => {
     } catch (err) {
       return res.status(404).send(err.message);
     }
+  });
+
+  router.post("/get-token-chart", authToken, async (req, res) => {
+    const contractAddress = req.body.contractAddress;
+    const days = req.body.days ? req.body.days : 7;
+    const data =
+      contractAddress === "eth"
+        ? await CoinGeckoClient.coins.fetchMarketChart("ethereum", {
+            vs_currency: "usd",
+            days,
+          })
+        : contractAddress === "btc"
+        ? await CoinGeckoClient.coins.fetchMarketChart("bitcoin", {
+            vs_currency: "usd",
+            days,
+          })
+        : await CoinGeckoClient.coins.fetchCoinContractMarketChart(
+            contractAddress,
+            "ethereum",
+            { vs_currency: "usd", days }
+          );
+    if (!data.success) return res.status(404).send(data.data.error);
+    return res.status(200).send(data.data.prices);
+  });
+  
+  router.post("/check-contract-address", authToken, async (req, res) => {
+    const contractAddress = req.body.contractAddress;
+    const data =
+      contractAddress === "eth"
+        ? await CoinGeckoClient.coins.fetch("ethereum", {
+            localization: false,
+            tickers: false,
+            market_data: true,
+            community_data: false,
+            developer_data: false,
+            sparkline: false,
+          })
+        : contractAddress === "btc"
+        ? await CoinGeckoClient.coins.fetch("bitcoin", {
+            localization: false,
+            tickers: false,
+            market_data: true,
+            community_data: false,
+            developer_data: false,
+            sparkline: false,
+          })
+        : await CoinGeckoClient.coins.fetchCoinContractInfo(contractAddress);
+    console.log(data.success);
+    if (!data.success) return res.status(404).send(data.data.error);
+    return res.status(200).send({
+      diff: data.data.market_data.price_change_percentage_24h,
+      symbol: data.data.symbol,
+      name: data.data.name,
+      price: data.data.market_data.current_price.usd,
+      image: data.data.image.small,
+    });
   });
 
 module.exports = router;
