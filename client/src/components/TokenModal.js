@@ -1,3 +1,4 @@
+import TokenChart from "./TokenChart";
 import {
   Modal,
   Grid,
@@ -79,7 +80,7 @@ const TokenModal = (props) => {
 
             <Divider />
             <CardContent>
-            
+              <TokenChart tokenInfo = {props.tokenInfo} />
             </CardContent>
           </Card>
         </Grid>

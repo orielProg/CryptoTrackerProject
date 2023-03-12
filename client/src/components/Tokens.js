@@ -46,6 +46,12 @@ const Tokens = (props) => {
     dispatch(tokensActions.setError(""));
   };
 
+  const infoPopUp = () => {
+    enqueueSnackbar("Sorry, this token can't be charted at this moment.", {
+      variant: "info",
+    });
+  };
+
   const handleClose = () => {
     dispatch(tokensActions.setTokenInfo(null));
   };
@@ -104,6 +110,11 @@ const Tokens = (props) => {
               components={{
                 LoadingOverlay: LoadingComp,
                 NoRowsOverlay: CustomNoRowsOverlay,
+              }}
+              componentsProps={{
+                row: {
+                  onClick: (event) => {dispatch(checkIfCanBeCharted(event.currentTarget.dataset.id,infoPopUp))},
+                },
               }}
               isRowSelectable={() => false}
               rows={loading ? [] : tokens}
