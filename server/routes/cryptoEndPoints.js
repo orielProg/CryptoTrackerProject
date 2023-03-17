@@ -165,4 +165,52 @@ router.post("/logout", authToken, async (req, res) => {
     });
   });
 
+  router.post("/change-password", authToken, async (req, res, next) => {
+    const _id = req.user_id;
+    const oldPasswordInput = req.body.oldPassword;
+    const newPassword = req.body.newPassword;
+    const user = await User.findOne({ _id: _id });
+    const oldPassword = user.password;
+    const oldPasswordValid = await bcrypt.compare(oldPasswordInput, oldPassword);
+    if (!oldPasswordValid) {
+      console.log("HERE");
+      return res.status(400).send("Old password is wrong");
+    }
+    const salt = await bcrypt.genSalt(10);
+    const hashedPass = await bcrypt.hash(newPassword, salt);
+    await User.findOneAndUpdate({ _id: _id }, { password: hashedPass });
+    return res.status(200).send("Password updated");
+  });
+  
+  router.post("/change-wallets", authToken, async (req, res, next) => {
+    const _id = req.user_id;
+    const newWallets = req.body.wallets;
+    console.log(_id, newWallets);
+    newWallets.forEach((wallet) => {
+      if (!/^(0x){1}[0-9a-fA-F]{40}$/i.test(wallet) && !btcRegex.test(wallet)) {
+        return res.status(406).send({
+          success: false,
+          message: "At least one of the wallets is not valid",
+        });
+      }
+    });
+    await User.findOneAndUpdate({ _id: _id }, { wallets: newWallets });
+    return res.status(200).send("Wallets updated");
+  });
+  
+  router.get("/get-wallets", authToken, async (req, res, next) => {
+    const _id = req.user_id;
+    const user = await User.findOne({ _id: _id });
+    const wallets = user.wallets;
+    return res.status(200).send(wallets);
+  });
+
+  router.get("/get-picture", authToken, async (req, res, next) => {
+    const _id = req.user_id;
+    console.log(_id);
+    const user = await User.findOne({ _id: _id });
+    const photoUrl = user.photoUrl;
+    return res.status(200).send(photoUrl);
+  });
+
 module.exports = router;

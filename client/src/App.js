@@ -15,6 +15,8 @@ import Cookies from "js-cookie";
 import PasswordRecover from "./components/PasswordRecover";
 import { SnackbarProvider } from "notistack";
 import Dashboard from "./components/Dashboard";
+import Settings from "./components/Settings";
+
 
 export const LoggedInContext = createContext();
 
@@ -50,6 +52,7 @@ function App() {
 
             {loggedIn && (
               <Routes>
+              <Route path="/settings" element={<Settings />} />
                 <Route path="/" element={<Dashboard />} />
                 <Route path="*" element={<Navigate to="/" replace />} />
               </Routes>
