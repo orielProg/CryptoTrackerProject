@@ -108,3 +108,15 @@ export const checkIfCanBeCharted = (contractAddress,infoPopUp) => {
       })
   };
 };
+
+export const fetchPrediction = (contractAddress, setPrediction) => {
+  return (dispatch) => {
+    return axios
+      .get("/app/get-token-prediction",{params : {contractAddress}})
+      .then((data) =>
+        dispatch(() => {setPrediction(data.data.result)})
+      ).catch(error => {
+        console.log(error);
+      })
+  };
+}

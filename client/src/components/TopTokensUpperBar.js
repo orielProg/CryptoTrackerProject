@@ -2,7 +2,7 @@ import { Fragment, useContext,useEffect,useState } from "react";
 import { Toolbar, Avatar } from "@mui/material";
 import { useTheme } from "@emotion/react";
 import { Tooltip, IconButton } from "@mui/material";
-import SettingsIcon from "@mui/icons-material/Settings";
+import HomeIcon from '@mui/icons-material/Home';
 import { padding } from "@mui/system";
 import LogoutIcon from "@mui/icons-material/Logout";
 import { Grid } from "@mui/material";
@@ -11,7 +11,6 @@ import Cookies from "js-cookie";
 import { LoggedInContext } from "../App";
 import axios from "axios";
 import { blue } from "@mui/material/colors";
-import RecommendIcon from '@mui/icons-material/Recommend';
 
 const Upperbar = (props) => {
   const navigate = useNavigate();
@@ -20,13 +19,9 @@ const Upperbar = (props) => {
   
   console.log("Context check", context);
 
-  const openSettings = () => {
-    navigate("/settings")
+  const openDashboard = () => {
+    navigate("/")
   };
-  const openTopCoins = () => {
-    navigate("/recommended")
-  }
-
 
   const logoutHandler = async () => {
     await axios
@@ -55,14 +50,9 @@ const Upperbar = (props) => {
       </Grid>
       <Grid container justifyContent="right">
         {" "}
-        <Tooltip title="Recommended Coins" sx={{ mr: 2 }}>
-          <IconButton onClick={openTopCoins}>
-            <RecommendIcon />
-          </IconButton>
-        </Tooltip>
-        <Tooltip title="Settings" sx={{ mr: 2 }}>
-          <IconButton onClick={openSettings}>
-            <SettingsIcon />
+        <Tooltip title="Home" sx={{ mr: 2 }}>
+          <IconButton onClick={openDashboard}>
+            <HomeIcon />
           </IconButton>
         </Tooltip>
         <Avatar sx={{ bgcolor: blue[700] }} src={context.picture} />

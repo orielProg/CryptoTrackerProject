@@ -1,12 +1,15 @@
 const User = require("../model/User");
 const { getAssets } = require("../crypto/crypto_functions");
+const bcrypt = require("bcryptjs");
 const authToken = require("./verifyToken");
 const { db } = require("../model/User");
 const { default: mongoose } = require("mongoose");
 const { deleteTokens } = require("../jwt_helper/jwt_functions");
 const router = require("express").Router();
 const CoinGecko = require("coingecko-api");
+const {getPrediction} = require('../prediction_model/getPrediction')
 const CoinGeckoClient = new CoinGecko();
+const fs = require('fs');
 
 
 const getSortingPipeline = (sortingModel) => {
@@ -14,6 +17,10 @@ const getSortingPipeline = (sortingModel) => {
     const value = sortingModel.sort === "asc" ? 1 : -1;
     return { key, value };
   };
+
+  const btcRegex = new RegExp(
+    "\\b(bc(0([ac-hj-np-z02-9]{39}|[ac-hj-np-z02-9]{59})|1[ac-hj-np-z02-9]{8,87})|[13][a-km-zA-HJ-NP-Z1-9]{25,35})\\b"
+  );
 
 
 router.get("/fetch-tokens", authToken, async (req, res, next) => {
@@ -211,6 +218,46 @@ router.post("/logout", authToken, async (req, res) => {
     const user = await User.findOne({ _id: _id });
     const photoUrl = user.photoUrl;
     return res.status(200).send(photoUrl);
+  });
+
+  router.get("/get-token-prediction", authToken, async (req, res) => {
+    const contractAddress = req.query.contractAddress;
+    const days =30
+    const data =
+    contractAddress === "eth"
+    ? await CoinGeckoClient.coins.fetchMarketChart("ethereum", {
+        vs_currency: "usd",
+        days,
+      })
+    : contractAddress === "btc"
+    ? await CoinGeckoClient.coins.fetchMarketChart("bitcoin", {
+        vs_currency: "usd",
+        days,
+      })
+    : await CoinGeckoClient.coins.fetchCoinContractMarketChart(
+        contractAddress,
+        "ethereum",
+        { vs_currency: "usd", days }
+      );
+    console.log(data.success);
+    if (!data.success) return res.status(404).send(data.data.error);
+    const unixTime = Math.round(new Date().getTime() / 1000);
+    try{
+      fs.writeFile(`${unixTime}.json`, JSON.stringify(data.data), 'utf8', function async (err) {
+        if (err) {
+            console.log("An error occured while writing JSON Object to File.");
+            return console.log(err);
+        }
+     
+        console.log("JSON file has been saved.");
+    });
+    const prediction = await getPrediction(`${unixTime}`);
+    console.log(prediction);
+    return res.status(200).send({result:prediction})
+    }
+    catch(err){
+      console.log(err);
+    }
   });
 
 module.exports = router;
