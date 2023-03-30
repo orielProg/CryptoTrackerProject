@@ -12,7 +12,7 @@ import { LoggedInContext } from "../App";
 import axios from "axios";
 import { blue } from "@mui/material/colors";
 
-const Upperbar = (props) => {
+const TopTokensUpperbar = (props) => {
   const navigate = useNavigate();
   const context = useContext(LoggedInContext);
   const theme = useTheme();
@@ -61,4 +61,4 @@ const Upperbar = (props) => {
   );
 };
 
-export default Upperbar;
+export default TopTokensUpperbar;

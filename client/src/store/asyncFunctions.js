@@ -2,6 +2,7 @@ import { chartActions } from "./chart";
 import axios from "axios";
 import { cardsActions } from "./cards";
 import tokens, { tokensActions } from "./tokens";
+import { topCoinsActions } from "./topcoins";
 
 export const loadChart = () => {
   console.log("loading chart with redux");
@@ -118,5 +119,23 @@ export const fetchPrediction = (contractAddress, setPrediction) => {
       ).catch(error => {
         console.log(error);
       })
+  };
+}
+
+export const fetchTopCoins = () => {
+  return (dispatch) => {
+    dispatch(topCoinsActions.setLoading(true));
+    axios
+      .get("/app/get-top-coins")
+      .then((res) => {
+        dispatch(topCoinsActions.setExpirationDate(Date.now()+600000))
+        dispatch(topCoinsActions.setTopCoins(res.data));
+      })
+      .catch((err) => {
+        if (err && err.response && err.response.message)
+          dispatch(topCoinsActions.setError(err.response.message));
+        else dispatch(topCoinsActions.setError(err.message));
+      });
+    dispatch(topCoinsActions.setLoading(false));
   };
 }

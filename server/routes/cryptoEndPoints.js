@@ -1,4 +1,5 @@
 const User = require("../model/User");
+const TopCoin = require("../model/TopCoins");
 const { getAssets } = require("../crypto/crypto_functions");
 const bcrypt = require("bcryptjs");
 const authToken = require("./verifyToken");
@@ -258,6 +259,12 @@ router.post("/logout", authToken, async (req, res) => {
     catch(err){
       console.log(err);
     }
+  });
+
+  router.get("/get-top-coins", authToken, async (req, res) => {
+    //get all documents in topcoins collection from db
+    const topCoins = await TopCoin.find();
+    res.status(200).send(topCoins);
   });
 
 module.exports = router;
