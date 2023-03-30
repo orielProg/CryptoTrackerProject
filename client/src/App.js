@@ -10,12 +10,14 @@ import {
 } from "react-router-dom";
 import { theme } from "./theme";
 import ForgotPassword from "./components/ForgotPassword";
-import { createContext,useState } from "react";
+import { createContext,useState,useEffect } from "react";
 import Cookies from "js-cookie";
 import PasswordRecover from "./components/PasswordRecover";
 import { SnackbarProvider } from "notistack";
 import Dashboard from "./components/Dashboard";
 import Settings from "./components/Settings";
+import TopTokens from "./components/TopTokens";
+import axios from "axios";
 
 
 export const LoggedInContext = createContext();
@@ -24,7 +26,23 @@ export const LoggedInContext = createContext();
 
 function App() {
   const [picture, setPicture] = useState("");
+  console.log(picture)
   const [loggedIn, setLoggedIn] = useState(Cookies.get("loggedIn"));
+
+  const getPicture = async () => {
+    await axios
+      .get("/app/get-picture")
+      .then((res) => {
+        setPicture(res.data);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+
+  useEffect(async () => {
+    if (loggedIn) await getPicture();
+  }, []);
 
   return (
     <ThemeProvider theme={theme}>
@@ -54,6 +72,7 @@ function App() {
               <Routes>
               <Route path="/settings" element={<Settings />} />
                 <Route path="/" element={<Dashboard />} />
+                <Route path="/recommended" element={<TopTokens />} />
                 <Route path="*" element={<Navigate to="/" replace />} />
               </Routes>
             )}
