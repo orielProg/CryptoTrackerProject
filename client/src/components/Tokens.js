@@ -32,6 +32,7 @@ const Tokens = (props) => {
   const rowCount = useSelector((state) => state.tokens.rowCount);
   const tokenInfo = useSelector((state) => state.tokens.tokenInfo);
   const sortingModel = useSelector((state) => state.tokens.sortingModel);
+  console.log(sortingModel)
 
   const successFunction = () => {
     enqueueSnackbar("Tokens updated successfully", {
@@ -83,7 +84,7 @@ const Tokens = (props) => {
 
 
   const handleSortModelChange = (newModel) => {
-    console.log(newModel);
+    console.log("changing model to ")
     dispatch(tokensActions.setSortingModel(newModel));
   };
 

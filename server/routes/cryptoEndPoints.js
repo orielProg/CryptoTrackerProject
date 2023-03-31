@@ -14,8 +14,8 @@ const fs = require('fs');
 
 
 const getSortingPipeline = (sortingModel) => {
-    const key = "latestData.assets." + sortingModel[0].field;
-    const value = sortingModel.sort === "asc" ? 1 : -1;
+    const key = "latestData.assets." + (sortingModel.length!==0 ? sortingModel[0].field : "price");
+    const value = (sortingModel.length!==0 && sortingModel[0].sort === "asc") ? 1 : -1;
     return { key, value };
   };
 

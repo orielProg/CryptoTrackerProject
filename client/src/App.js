@@ -26,7 +26,6 @@ export const LoggedInContext = createContext();
 
 function App() {
   const [picture, setPicture] = useState("");
-  console.log(picture)
   const [loggedIn, setLoggedIn] = useState(Cookies.get("loggedIn"));
 
   const getPicture = async () => {

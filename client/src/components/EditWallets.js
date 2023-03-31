@@ -205,7 +205,7 @@ const EditWallets = (props) => {
                   fullWidth
                   type="wallet"
                   id="wallet"
-                  label="ERC20 Wallet"
+                  label="Wallet Address"
                   inputRef={walletRef}
                 />
               </CardContent>
