@@ -61,7 +61,7 @@ const TokenModal = (props) => {
   const TopComponent = (
     <Grid container alignItems={"center"}>
       <Typography variant="h4" color="text.primary" sx={{ paddingRight: 1 }}>
-        ${price}
+        ${price.toLocaleString("en-US")}
       </Typography>
       {diff >= 0 && (
         <ArrowUpwardIcon sx={{ color: green[500], fontSize: "100" }} />

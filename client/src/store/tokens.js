@@ -31,7 +31,7 @@ const tokensSlice = createSlice({
       state.rowCount = action.payload;
     },
     setSortingModel: (state, action) => {
-      state.sortModel = action.payload;
+      state.sortingModel = action.payload;
     },
     setFetchCounter : (state, action) =>{
       state.fetchCounter = action.payload;
