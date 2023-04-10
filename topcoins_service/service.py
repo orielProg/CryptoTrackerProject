@@ -12,7 +12,7 @@ DB_CONNECT = os.getenv("DB_CONNECT")
 
 cg = CoinGeckoAPI()
 
-coins = "bitcoin,ethereum"
+coins = "bitcoin,ethereum,binancecoin,ripple,cardano,solana,polkadot"
 
 def get_top_coins_data():
     return cg.get_coins_markets(vs_currency='usd', ids=coins, order='market_cap_desc', per_page=100, page=1, sparkline=False, price_change_percentage='1h,24h,7d')
