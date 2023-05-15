@@ -1,22 +1,38 @@
 import { Paper } from "@mui/material";
 import { Grid } from "@mui/material";
-import {Divider,Card, CardContent} from "@mui/material";
+import {Divider,Card, CardContent,Avatar} from "@mui/material";
 import Tokens from "./Tokens";
 import TopTokensUpperbar from "./TopTokensUpperBar";
 import { CardHeader,Box, Link, Stack, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from '@mui/material';
 import { useDispatch, useSelector } from "react-redux";
 import { fetchTopCoins } from "../store/asyncFunctions";
 import { useEffect } from "react";
+import { green, red } from "@mui/material/colors";
+import ArrowUpwardIcon from "@mui/icons-material/ArrowUpward";
+import ArrowDownwardIcon from "@mui/icons-material/ArrowDownward";
 
-const rows = [
-  {coin : "BTC", price : "123", oneh : "123", twentyfourh : "123", sevend : "123", twentyfourhvolume : "123", mkcap : "123", prediction : "123"},
-  {coin : "ETH", price : "123", oneh : "123", twentyfourh : "123", sevend : "123", twentyfourhvolume : "123", mkcap : "123", prediction : "123"},
-  {coin : "ADA", price : "123", oneh : "123", twentyfourh : "123", sevend : "123", twentyfourhvolume : "123", mkcap : "123", prediction : "123"},
-  {coin : "DOGE", price : "123", oneh : "123", twentyfourh : "123", sevend : "123", twentyfourhvolume : "123", mkcap : "123", prediction : "123"},
-  {coin : "DOT", price : "123", oneh : "123", twentyfourh : "123", sevend : "123", twentyfourhvolume : "123", mkcap : "123", prediction : "123"},
-  {coin : "XRP", price : "123", oneh : "123", twentyfourh : "123", sevend : "123", twentyfourhvolume : "123", mkcap : "123", prediction : "123"},
-  {coin : "UNI", price : "123", oneh : "123", twentyfourh : "123", sevend : "123", twentyfourhvolume : "123", mkcap : "123", prediction : "123"},
-]
+const UpwardTrend = (
+  <ArrowUpwardIcon sx={{ color: green[500] }} style={{ paddingRight: 2 }} />
+);
+const DownwardTrend = (
+  <ArrowDownwardIcon sx={{ color: red[500] }} style={{ paddingRight: 2 }} />
+);
+
+const firstLetterCapital = (word) => {
+  return word.charAt(0).toUpperCase() + word.slice(1);
+};
+
+const getTrend = (diff) =>{
+          const trendIcon = diff < 0
+            ? DownwardTrend
+            : UpwardTrend;
+        return (
+          <Grid container>
+            {trendIcon}
+            {Math.abs(diff).toFixed(2).toLocaleString("en-US")}%
+          </Grid>
+        );}
+
 
 const TopTokens = (props) => {
 
@@ -58,14 +74,15 @@ const TopTokens = (props) => {
       <Table>
         <TableHead>
           <TableRow>
-            <TableCell>Coin</TableCell>
-            <TableCell align="right">Price</TableCell>
-            <TableCell align="right">1h</TableCell>
-            <TableCell align="right">24h</TableCell>
-            <TableCell align="right">7d</TableCell>
-            <TableCell align="right">24h-volume</TableCell>
-            <TableCell align="right">mkt-cap</TableCell>
-            <TableCell align="right">Prediction</TableCell>
+          <TableCell >Image</TableCell>
+            <TableCell align="center">Coin</TableCell>
+            <TableCell align="center">Price</TableCell>
+            <TableCell align="center">1h</TableCell>
+            <TableCell align="center">24h</TableCell>
+            <TableCell align="center">7d</TableCell>
+            <TableCell align="center">24h-volume</TableCell>
+            <TableCell align="center">mkt-cap</TableCell>
+            <TableCell align="center">Prediction</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
@@ -75,18 +92,19 @@ const TopTokens = (props) => {
               sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
             >
               <TableCell component="th" scope="row">
-                {row.id}
+              <Avatar src={row.image} sx={{ width: 35, height: 35 }} />
+                
               </TableCell>
-              <TableCell align="right">{row.current_price.toLocaleString("en-US")
+              <TableCell align="center">{firstLetterCapital(row.id)}</TableCell>
+              <TableCell align="center">{"$"+row.current_price.toLocaleString("en-US")
               }</TableCell>
-              <TableCell align="right">{row.price_change_percentage_1h_in_currency.toLocaleString("en-US")}</TableCell>
-              <TableCell align="right">{row.price_change_percentage_24h_in_currency.toLocaleString("en-US")}</TableCell>
-              <TableCell align="right">{row.price_change_percentage_7d_in_currency.toLocaleString("en-US")
+              <TableCell align="center">{getTrend(row.price_change_percentage_1h_in_currency)}</TableCell>
+              <TableCell align="center">{getTrend(row.price_change_percentage_24h_in_currency)}</TableCell>
+              <TableCell align="center">{getTrend(row.price_change_percentage_7d_in_currency)}</TableCell>
+              <TableCell align="center">{"$"+row.total_volume.toLocaleString("en-US")
               }</TableCell>
-              <TableCell align="right">{row.total_volume.toLocaleString("en-US")
-              }</TableCell>
-              <TableCell align="right">{row.market_cap.toLocaleString("en-US")}</TableCell>
-              <TableCell align="right">{row.prediction}</TableCell>
+              <TableCell align="center">{"$"+row.market_cap.toLocaleString("en-US")}</TableCell>
+              <TableCell align="center">{firstLetterCapital(row.prediction)}</TableCell>
             </TableRow>
           ))}
         </TableBody>

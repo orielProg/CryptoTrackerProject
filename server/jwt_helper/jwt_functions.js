@@ -7,7 +7,7 @@ dotenv.config({path : "../.env"});
 
 const getTokens = async (req,res,userID) => {
     const accessToken = jwt.sign({_id : userID},process.env.ACCESS_TOKEN_SECRET, {expiresIn : "30m"})
-    const refreshToken = jwt.sign({_id : userID},process.env.REFRESH_TOKEN_SECRET, {expiresIn : "30d"})
+    const refreshToken = jwt.sign({_id : userID},process.env.REFRESH_TOKEN_SECRET, {expiresIn : "365d"})
     try{
     await User.findOneAndUpdate({_id : userID},{refreshToken})
     res.cookie("accessToken",accessToken, {maxAge : 1800000, httpOnly : true})
@@ -28,7 +28,7 @@ const getUserID = async (accessToken,refreshToken,res) => {
         else{
             await jwt.verify(refreshToken,process.env.REFRESH_TOKEN_SECRET, async (err,user) => {
                 console.log("USER : ", user)
-                const userTokenDB = await User.findById({_id : user._id},{refreshToken : 1});
+                const userTokenDB = await User.findById({_id : user._id},{refreshToken : refreshToken});
                 console.log("REFRESHING" ,userTokenDB);
                 if(userTokenDB.refreshToken!==refreshToken){
                     return res.status(403).send({success:false, message : "Tokens error"});

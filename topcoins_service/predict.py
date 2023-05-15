@@ -55,7 +55,7 @@ def run(file_name=None):
   model.compile(loss='mean_squared_error',
                 optimizer='adam')
 
-  model.fit(X, y,  epochs=7, batch_size=32,verbose=0)
+  model.fit(X, y,  epochs=25, batch_size=32,verbose=0)
 
   from copy import deepcopy
   import math

@@ -107,6 +107,7 @@ const Tokens = (props) => {
         <Box>
           <div style={{ height: "50vh", width: "100%" }}>
             <DataGrid
+            autoHeight={!loading}
               disableColumnFilter
               components={{
                 LoadingOverlay: LoadingComp,

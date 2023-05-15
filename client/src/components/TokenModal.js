@@ -25,6 +25,7 @@ import { green, red } from "@mui/material/colors";
 import { useState } from "react";
 import { useDispatch } from "react-redux";
 import { fetchPrediction } from "../store/asyncFunctions";
+import "../theme/customLoading.css"
 
 const style = {
   position: "absolute",
@@ -32,6 +33,9 @@ const style = {
   left: "50%",
   transform: "translate(-50%, -50%)",
 };
+
+const CustomLoadingButton = <div class="lds-circle"><div></div></div>;
+  
 
 const TokenModal = (props) => {
   const [loading,setLoading] = useState(false);
@@ -57,6 +61,10 @@ const TokenModal = (props) => {
     props && props.tokenInfo && props.tokenInfo.symbol
       ? props.tokenInfo.symbol
       : "";
+
+  const predictButton = () =>{ return(loading ? CustomLoadingButton : <Button variant="contained" size="big" onClick={predictHandler}>
+  PREDICT
+</Button>)}
 
   const TopComponent = (
     <Grid container alignItems={"center"}>
@@ -112,13 +120,10 @@ const TokenModal = (props) => {
               <Grid container xs={12} justifyContent="center" margin={2}>
                 <Grid item xs={8}>
                   <Alert severity="info" variant="filled" color = "info" action={
-                    <LoadingButton loading={loading} variant="contained" size="big" onClick={predictHandler}>
-                      PREDICT {prediction}
-                    </LoadingButton>
-                    
+                  predictButton()
                   }>
                     <AlertTitle>Price Prediction</AlertTitle>
-                    Click the button for price prediction! 
+                    {!loading ? "Click the button for price prediction!" : "Please wait, it might take a few seconds"}
                   </Alert>
                 </Grid>
               </Grid>
