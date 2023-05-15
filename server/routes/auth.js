@@ -4,6 +4,7 @@ const User = require("../model/User");
 const {
   registerSchema,
   loginSchema,
+  changePasswordSchema
 } = require("../validation");
 const crypto = require("crypto");
 

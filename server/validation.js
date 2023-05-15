@@ -12,6 +12,12 @@ const loginSchema = Joi.object({
     password : Joi.string().min(6).required()
 })
 
+const changePasswordSchema = Joi.object({
+    password : Joi.string().min(6).required(),
+    confirmPassword : Joi.any().equal(Joi.ref("password")).required().label('Confirm password')
+    .options({ messages: { 'any.only': 'Passwords do not match'} })
+})
 
 module.exports.registerSchema = registerSchema;
 module.exports.loginSchema = loginSchema;
+module.exports.changePasswordSchema = changePasswordSchema;

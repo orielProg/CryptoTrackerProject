@@ -223,7 +223,7 @@ router.post("/logout", authToken, async (req, res) => {
 
   router.get("/get-token-prediction", authToken, async (req, res) => {
     const contractAddress = req.query.contractAddress;
-    const days =30
+    const days = 30
     const data =
     contractAddress === "eth"
     ? await CoinGeckoClient.coins.fetchMarketChart("ethereum", {
