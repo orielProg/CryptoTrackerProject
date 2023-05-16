@@ -10,7 +10,7 @@ import {
 
 import ArrowDownwardIcon from "@mui/icons-material/ArrowDownward";
 import ArrowUpwardIcon from "@mui/icons-material/ArrowUpward";
-import { green, red } from "@mui/material/colors";
+import { green, red,common } from "@mui/material/colors";
 import { useSnackbar } from "notistack";
 
 import { useEffect, useContext } from "react";
@@ -20,7 +20,9 @@ import { useDispatch, useSelector } from "react-redux";
 import { cardsActions } from "../store/cards";
 import { loadCards } from "../store/asyncFunctions";
 import { getCards } from "./default_cards_state";
+import RemoveIcon from '@mui/icons-material/Remove';
 
+const NaturalTrend = <RemoveIcon sx={{ color: common[500] }} />;
 const UpwardTrend = <ArrowUpwardIcon sx={{ color: green[500] }} />;
 const DownwardTrend = <ArrowDownwardIcon sx={{ color: red[500] }} />;
 
@@ -77,11 +79,11 @@ const ContentCard = (props) => {
                   spacing={1}
                 >
                   <Grid item>
-                    {element.trend === "up" ? UpwardTrend : DownwardTrend}
+                    {(element.trendValue==="0%" || element.trendValue===0) ? NaturalTrend : element.trend === "up" ? UpwardTrend : DownwardTrend}
                   </Grid>
                   <Grid item>
                     <Typography variant="body2">
-                      {element.trendValue} since last check
+                      {(element.trendValue==="0%" || element.trendValue===0) ? "No changes" : element.trendValue} since last check
                     </Typography>
                   </Grid>
                 </Grid>
