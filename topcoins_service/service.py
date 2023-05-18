@@ -4,6 +4,7 @@ import predict
 from pymongo import MongoClient
 from dotenv import load_dotenv
 import os
+from time import sleep
 load_dotenv()
 
 import json
@@ -34,13 +35,16 @@ def get_coins_predictions(coins_data,new=False):
 def upload_data_to_db(coins_data):
     #connect to mongodb atlas and upload the data
     client = MongoClient(DB_CONNECT)
-    client['test']['topcoinsepoch25'].delete_many({})
-    client['test']['topcoinsepoch25'].insert_many(coins_data)
+    client['test']['topcoins'].delete_many({})
+    client['test']['topcoins'].insert_many(coins_data)
 
 
 if __name__ == '__main__':
-    coins_data = get_top_coins_data()
-    get_coins_predictions(coins_data,True)
-    get_coins_predictions(coins_data)
-    upload_data_to_db(coins_data)
-    
+    while True:
+        coins_data = get_top_coins_data()
+        print("got coins data")
+        get_coins_predictions(coins_data)
+        print("got predictions")
+        upload_data_to_db(coins_data)
+        print("uploaded to db")
+        sleep(60*60*24)

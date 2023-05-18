@@ -1,0 +1,19 @@
+# Base image
+FROM node:14.18.1 as frontend-build
+WORKDIR /app
+
+# Copy package.json and package-lock.json
+COPY package*.json ./
+
+# Install dependencies
+RUN npm ci
+
+# Copy the entire front-end source code
+COPY . .
+
+# Build the React app
+RUN npm run build
+
+# Expose the desired port
+EXPOSE 3000
+CMD [ "npm", "start"]

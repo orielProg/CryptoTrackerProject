@@ -16,6 +16,7 @@ import {
   Box,
 } from "@mui/material";
 import LoadingButton from "@mui/lab/LoadingButton";
+import Slider from "@mui/material/Slider";
 
 import CloseIcon from "@mui/icons-material/Close";
 import { Fragment } from "react";
@@ -25,7 +26,7 @@ import { green, red } from "@mui/material/colors";
 import { useState } from "react";
 import { useDispatch } from "react-redux";
 import { fetchPrediction } from "../store/asyncFunctions";
-import "../theme/customLoading.css"
+import "../theme/customLoading.css";
 
 const style = {
   position: "absolute",
@@ -34,12 +35,15 @@ const style = {
   transform: "translate(-50%, -50%)",
 };
 
-const CustomLoadingButton = <div class="lds-circle"><div></div></div>;
-  
+const CustomLoadingButton = (
+  <div class="lds-circle">
+    <div></div>
+  </div>
+);
 
 const TokenModal = (props) => {
-  const [loading,setLoading] = useState(false);
-  const [prediction,setPrediction] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [prediction, setPrediction] = useState("");
   const dispatch = useDispatch();
   const open = props.tokenInfo ? true : false;
   const price =
@@ -62,9 +66,46 @@ const TokenModal = (props) => {
       ? props.tokenInfo.symbol
       : "";
 
-  const predictButton = () =>{ return(loading ? CustomLoadingButton : <Button variant="contained" size="big" onClick={predictHandler}>
-  PREDICT
-</Button>)}
+  const predictButton = () => {
+    return loading ? (
+      CustomLoadingButton
+    ) : (
+      <Button variant="contained" size="big" onClick={predictHandler}>
+        PREDICT
+      </Button>
+    );
+  };
+
+  const marks = [
+    {
+      value: 0,
+      label: "Strong Sell",
+    },
+    {
+      value: 25,
+      label: "Sell",
+    },
+    {
+      value: 50,
+      label: "Neutral",
+    },
+    {
+      value: 75,
+      label: "Buy",
+    },
+    {
+      value: 100,
+      label: "Strong Buy",
+    },
+  ];
+
+  const marksMap = {
+    "strong sell": 0,
+    sell: 25,
+    neutral: 50,
+    buy: 75,
+    "strong buy": 100,
+  };
 
   const TopComponent = (
     <Grid container alignItems={"center"}>
@@ -85,16 +126,24 @@ const TokenModal = (props) => {
 
   const predictHandler = async () => {
     setLoading(true);
-    await dispatch(fetchPrediction(props.tokenInfo.contractAddress,setPrediction));
+    await dispatch(
+      fetchPrediction(props.tokenInfo.contractAddress, setPrediction)
+    );
     console.log("predicting");
     setLoading(false);
-    console.log(prediction)
+    console.log(prediction);
+  };
+
+  const closeModel = () => {
+    console.log("LOLLLL");
+    setPrediction("");
+    props.handleClose();
   };
 
   return (
     <Modal
       open={open}
-      onClose={props.handleClose}
+      onClose={closeModel}
       aria-labelledby="modal-modal-title"
       aria-describedby="modal-modal-description"
     >
@@ -107,7 +156,7 @@ const TokenModal = (props) => {
               titleTypographyProps={{ variant: "h6" }}
               subheader={TopComponent}
               action={
-                <IconButton aria-label="add" onClick={props.handleClose}>
+                <IconButton aria-label="add" onClick={closeModel}>
                   <CloseIcon />
                 </IconButton>
               }
@@ -119,11 +168,38 @@ const TokenModal = (props) => {
               <Divider />
               <Grid container xs={12} justifyContent="center" margin={2}>
                 <Grid item xs={8}>
-                  <Alert severity="info" variant="filled" color = "info" action={
-                  predictButton()
-                  }>
+                  <Alert
+                    severity="info"
+                    variant="filled"
+                    color="info"
+                    action={
+                      <Fragment>
+                        {prediction ? (
+                          <Grid container alignItems="center" spacing={1}>
+                            <Grid item xs={12}>
+                              <Box sx={{ width: 300 }}>
+                                <Slider
+                                  aria-label="Custom marks"
+                                  defaultValue={marksMap[prediction]}
+                                  marks={marks}
+                                  step={25}
+                                  disabled
+                                />
+                              </Box>
+                            </Grid>
+                          </Grid>
+                        ) : (
+                          predictButton()
+                        )}
+                      </Fragment>
+                    }
+                  >
                     <AlertTitle>Price Prediction</AlertTitle>
-                    {!loading ? "Click the button for price prediction!" : "Please wait, it might take a few seconds"}
+                    {!loading && !prediction
+                      ? "Click the button for price prediction!"
+                      : prediction
+                      ? "This recommendation is based on technical machine learning, and therefore, we advise you to consult with a certified investment advisor."
+                      : "Please wait, it might take a few seconds"}
                   </Alert>
                 </Grid>
               </Grid>
