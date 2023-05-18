@@ -1,0 +1,25 @@
+kind: Pod
+apiVersion: v1
+metadata:
+  name: test-react-app
+spec:
+  containers:
+    - name: test-react-app
+      image: docker.io/library/crypto-front
+      imagePullPolicy: Never
+      ports:
+        - containerPort: 3000
+---
+
+kind: Service
+apiVersion: v1
+metadata:
+  name: test-react-app
+spec:
+  type: NodePort
+  ports:
+    - port: 3000
+      targetPort: 3000
+      nodePort: 30008
+  selector:
+    app: test-react-app

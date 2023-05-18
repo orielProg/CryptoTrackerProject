@@ -1,7 +1,6 @@
 import numpy as np
 import json
 from sklearn.preprocessing import MinMaxScaler
-import matplotlib.pyplot as plt
 import sys
 
 
@@ -55,7 +54,7 @@ def run(file_name=None):
   model.compile(loss='mean_squared_error',
                 optimizer='adam')
 
-  model.fit(X, y,  epochs=25, batch_size=32,verbose=0)
+  model.fit(X, y,  epochs=7, batch_size=32,verbose=0)
 
   from copy import deepcopy
   import math
@@ -74,7 +73,7 @@ def run(file_name=None):
   def get_prediction(predicted_price, current_price):
       change = ((predicted_price - current_price) / current_price)*100
       if math.fabs(change) < 1:
-          return "natural"
+          return "netural"
       if change >=1 and change<4:
           return "buy"
       if change >=4:

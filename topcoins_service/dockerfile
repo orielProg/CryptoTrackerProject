@@ -1,0 +1,16 @@
+FROM python:3.9.13
+RUN pip install --upgrade pip
+RUN mkdir /work/
+WORKDIR /work/
+
+COPY ./requirements.txt /work/requirements.txt
+
+
+RUN pip3 install --upgrade pip setuptools && \
+    pip3 install -r requirements.txt
+
+COPY ./ /work/
+ENV APP=service.py
+ENV PYTHONUNBUFFERED=1
+
+cmd ["python3", "service.py"]
