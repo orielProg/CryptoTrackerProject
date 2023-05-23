@@ -13,7 +13,6 @@ const CoinGeckoClient = new CoinGecko();
 const fs = require("fs");
 const axios = require("axios");
 
-
 const getSortingPipeline = (sortingModel) => {
   const key =
     "latestData.assets." +
@@ -197,14 +196,18 @@ router.post("/change-wallets", authToken, async (req, res, next) => {
   const _id = req.user_id;
   const newWallets = req.body.wallets;
   console.log(_id, newWallets);
-  newWallets.forEach((wallet) => {
-    if (!/^(0x){1}[0-9a-fA-F]{40}$/i.test(wallet) && !btcRegex.test(wallet)) {
-      return res.status(406).send({
-        success: false,
-        message: "At least one of the wallets is not valid",
-      });
-    }
-  });
+  if (
+    newWallets.some((wallet) => {
+      if (!/^(0x){1}[0-9a-fA-F]{40}$/i.test(wallet) && !btcRegex.test(wallet)) {
+        return true;
+      }
+    })
+  ) {
+    return res.status(406).send({
+      success: false,
+      message: "At least one of the wallets is not valid",
+    });
+  }
   await User.findOneAndUpdate({ _id: _id }, { wallets: newWallets });
   return res.status(200).send("Wallets updated");
 });

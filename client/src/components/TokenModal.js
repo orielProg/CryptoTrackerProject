@@ -27,6 +27,7 @@ import { useState } from "react";
 import { useDispatch } from "react-redux";
 import { fetchPrediction } from "../store/asyncFunctions";
 import "../theme/customLoading.css";
+import PredictionsChart from "./PredictionsChart";
 
 const style = {
   position: "absolute",
@@ -148,7 +149,7 @@ const TokenModal = (props) => {
       aria-describedby="modal-modal-description"
     >
       <Grid container xs={8} justifyContent="center" style={style}>
-        <Grid item xs={12}>
+        <Grid item xs={10}>
           <Card>
             <CardHeader
               avatar={<Avatar src={image} aria-label="token-image" />}
@@ -174,18 +175,10 @@ const TokenModal = (props) => {
                     color="info"
                     action={
                       <Fragment>
-                        {prediction ? (
-                          <Grid container alignItems="center" spacing={1}>
+                        {!prediction ? (
+                          <Grid container alignItems="center" spacing={1} xs={12}>
                             <Grid item xs={12}>
-                              <Box sx={{ width: 300 }}>
-                                <Slider
-                                  aria-label="Custom marks"
-                                  defaultValue={marksMap[prediction]}
-                                  marks={marks}
-                                  step={25}
-                                  disabled
-                                />
-                              </Box>
+                              <PredictionsChart />
                             </Grid>
                           </Grid>
                         ) : (

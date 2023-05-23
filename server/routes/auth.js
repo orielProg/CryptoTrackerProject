@@ -13,7 +13,6 @@ const Token = require("../model/Token");
 const sendEmail = require("../emailService/sendEmail");
 
 const createUser = async (req) => {
-  console.log(req);
   const salt = await bcrypt.genSalt(10);
   const hashedPass = await bcrypt.hash(req.body.password, salt);
 
@@ -83,7 +82,6 @@ router.post("/register", async (req, res) => {
   const usernameExist = await User.findOne({ username: req.body.username });
   if (emailExist) return res.status(400).send("Email already exists");
   if (usernameExist) return res.status(400).send("Username already exists");
-  console.log(req.body);
   await createUser(req);
   return res.status(200).send("User created");
 });
@@ -231,6 +229,36 @@ router.post("/change-password", async (req, res) => {
     return res
       .status(400)
       .send({ success: false, message: "Could not update password" });
+  }
+});
+
+router.get("/password-reset/:userID/:token", async (req, res) => {
+  try {
+    const token = req.params.token;
+    const userID = req.params.userID;
+    console.log(token, userID);
+    const user = await User.findOne({ _id: userID });
+    console.log(user);
+    if (!user) {
+      console.log("does not exists");
+      return res
+        .status(404)
+        .send({ success: false, message: "The link has expired" });
+    }
+    const email = user.email;
+    const tokenObject = await Token.findOne({ email });
+    console.log(tokenObject);
+    if (!tokenObject || tokenObject.token !== token) {
+      console.log("does not exists");
+      return res
+        .status(404)
+        .send({ success: false, message: "The link has expired" });
+    }
+    return res.status(200).send({ success: true });
+  } catch (error) {
+    return res
+      .status(400)
+      .send({ success: false, message: "Error has been occurred" });
   }
 });
 
