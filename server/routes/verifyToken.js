@@ -21,9 +21,10 @@ const authToken = async (req, res, next) => {
     req.cookies.refreshToken,
     res
   );
-  if (!id) return;
+  if (!id){
+    return res.status(401).send("Unauthorized, tokens error");
+  } 
   req.user_id = id;
-  console.log(id);
   next();
 };
 

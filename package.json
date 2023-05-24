@@ -4,7 +4,7 @@
   "description": "",
   "main": "server\\index.js",
   "scripts": {
-    "test": "cross-env NODE_ENV=test jest --testTimeout=5000 --detectOpenHandles",
+    "test": "cross-env NODE_ENV=test jest --testTimeout=20000 --detectOpenHandles --forceExit",
     "client": "cd client && npm start",
     "server": "node ./server/index.js",
     "dev": "concurrently --kill-others-on-fail \"npm run server\" \"npm run client\"",

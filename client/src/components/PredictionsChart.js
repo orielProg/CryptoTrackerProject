@@ -22,7 +22,7 @@ const PredictionsChart = (props) => (
               fontSize: '80%',
             },
             {
-              text: 'Netural',
+              text: 'Neutral',
               position: 'OUTSIDE',
               fontSize: '80%',              
             },

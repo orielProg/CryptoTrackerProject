@@ -195,7 +195,6 @@ router.post("/change-password", authToken, async (req, res, next) => {
 router.post("/change-wallets", authToken, async (req, res, next) => {
   const _id = req.user_id;
   const newWallets = req.body.wallets;
-  console.log(_id, newWallets);
   if (
     newWallets.some((wallet) => {
       if (!/^(0x){1}[0-9a-fA-F]{40}$/i.test(wallet) && !btcRegex.test(wallet)) {

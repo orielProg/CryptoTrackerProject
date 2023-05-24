@@ -20,18 +20,16 @@ const getTokens = async (req,res,userID) => {
 }
 
 const getUserID = async (accessToken,refreshToken,res) => {
-    if(refreshToken == null) return res.status(400).send("Tokens error");
+    if(refreshToken == null) return null;
     let _id = null;
     await jwt.verify(accessToken,process.env.ACCESS_TOKEN_SECRET, async (err,user) => {
-        console.log("USER : ", user)
         if(user) _id = user._id;
         else{
             await jwt.verify(refreshToken,process.env.REFRESH_TOKEN_SECRET, async (err,user) => {
-                console.log("USER : ", user)
                 const userTokenDB = await User.findById({_id : user._id},{refreshToken : refreshToken});
                 console.log("REFRESHING" ,userTokenDB);
                 if(userTokenDB.refreshToken!==refreshToken){
-                    return res.status(403).send({success:false, message : "Tokens error"});
+                    return null;
                 }
                 _id = user._id;
                 await getTokens({},res,_id);

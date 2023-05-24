@@ -16,7 +16,14 @@ describe("all routes", () => {
   afterAll(async () => {
     await mongoose.disconnect();
     await mongoose.connection.close();
+
   });
+
+  describe("no access token", () => {
+    it("should not access app", async () => {
+      await request(app).get("/app/get-wallets").expect(401);
+    })
+  })
   
 
   describe("register route", () => {
@@ -90,4 +97,32 @@ describe("all routes", () => {
 
 
     })
+
+    describe("tokens route", () => {
+        it("should get token graph", async () => {
+          await request(app).post("/app/get-token-chart").set('Cookie', cookies).send({contractAddress:"eth"}).expect(200);
+        });
+        it("should not get token graph", async () => {
+          await request(app).post("/app/get-token-chart").set('Cookie', cookies).send({contractAddress:"testcoin"}).expect(404);
+        });
+
+        it("should get topcoins", async () => {
+          const response = await request(app).get("/app/get-top-coins").set('Cookie', cookies).expect(200);
+          const numOfTopCoins = 7;
+          expect(response.body.length).toEqual(numOfTopCoins);
+          expect(response.body[0].id).toEqual("bitcoin");
+          expect(response.body[0].current_price!==undefined).toEqual(true);
+          expect(response.body[0].price_change_percentage_1h_in_currency!==undefined).toEqual(true);
+        })
+
+        it("should get prediction for btc", async () => {
+          const validPredictions = ["strong sell", "sell", "neutral", "buy", "strong buy"]
+          const response = await request(app).get("/app/get-token-prediction?contractAddress=btc").set('Cookie', cookies).expect(200);
+          expect(validPredictions.some((prediction) => prediction===response.body.result)).toEqual(true);
+      });
+
+      it("should not get prediction", async () => {
+        const response = await request(app).get("/app/get-token-prediction?contractAddress=test").set('Cookie', cookies).expect(404);
+    });
+    });
 });
