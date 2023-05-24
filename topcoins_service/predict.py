@@ -73,7 +73,7 @@ def run(file_name=None):
   def get_prediction(predicted_price, current_price):
       change = ((predicted_price - current_price) / current_price)*100
       if math.fabs(change) < 1:
-          return "netural"
+          return "neutral"
       if change >=1 and change<4:
           return "buy"
       if change >=4:

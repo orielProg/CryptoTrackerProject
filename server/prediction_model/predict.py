@@ -72,7 +72,7 @@ for i in range(15):
 def get_prediction(predicted_price, current_price):
     change = ((predicted_price - current_price) / current_price)*100
     if math.fabs(change) < 1:
-        return "natural"
+        return "neutral"
     if change >=1 and change<4:
         return "buy"
     if change >=4:
