@@ -143,28 +143,6 @@ const TokenModal = (props) => {
     props.handleClose();
   };
 
-  const [windowSize, setWindowSize] = useState({
-    width: window.innerWidth,
-    // height: window.innerHeight,
-  });
-
-  useEffect(() => {
-    const handleResize = () => {
-      setWindowSize({
-        width: window.innerWidth,
-        // height: window.innerHeight,
-      });
-      console.log('changeddd')
-    };
-
-    window.addEventListener('resize', handleResize);
-
-    return () => {
-      window.removeEventListener('resize', handleResize);
-    };
-  }, []);
-
-  const { width } = windowSize;
 
   return (
     <Modal
@@ -198,11 +176,7 @@ const TokenModal = (props) => {
                     <Grid><InsightsIcon sx={{ fontSize: "40px" }}></InsightsIcon></Grid>
                     <Grid item xs={4}><Typography variant="h5">Price Prediction</Typography></Grid>
                   </Grid>
-                  <Grid item xs={4} marginTop={0}><PredictionsChart width={width*0.2}/></Grid>
-                  {/* <div style={{ padding:0, margin:0 }}>
-                    <PredictionsChart></PredictionsChart>
-                  </div> */}
-                  
+                  <Grid item xs={4} marginTop={1}><PredictionsChart/></Grid>
                   {/* <Alert
                     severity="info"
                     variant="filled"
