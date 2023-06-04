@@ -14,6 +14,7 @@ import {
   AlertTitle,
   Collapse,
   Box,
+  Container,
 } from "@mui/material";
 import LoadingButton from "@mui/lab/LoadingButton";
 import Slider from "@mui/material/Slider";
@@ -23,11 +24,12 @@ import { Fragment } from "react";
 import ArrowDownwardIcon from "@mui/icons-material/ArrowDownward";
 import ArrowUpwardIcon from "@mui/icons-material/ArrowUpward";
 import { green, red } from "@mui/material/colors";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { fetchPrediction } from "../store/asyncFunctions";
 import "../theme/customLoading.css";
 import PredictionsChart from "./PredictionsChart";
+import InsightsIcon from '@mui/icons-material/Insights';
 
 const style = {
   position: "absolute",
@@ -141,6 +143,29 @@ const TokenModal = (props) => {
     props.handleClose();
   };
 
+  const [windowSize, setWindowSize] = useState({
+    width: window.innerWidth,
+    // height: window.innerHeight,
+  });
+
+  useEffect(() => {
+    const handleResize = () => {
+      setWindowSize({
+        width: window.innerWidth,
+        // height: window.innerHeight,
+      });
+      console.log('changeddd')
+    };
+
+    window.addEventListener('resize', handleResize);
+
+    return () => {
+      window.removeEventListener('resize', handleResize);
+    };
+  }, []);
+
+  const { width } = windowSize;
+
   return (
     <Modal
       open={open}
@@ -168,8 +193,17 @@ const TokenModal = (props) => {
               <TokenChart tokenInfo={props.tokenInfo} />
               <Divider />
               <Grid container xs={12} justifyContent="center" margin={2}>
-                <Grid item xs={8}>
-                  <Alert
+                {/* <Grid item xs={12}> */}
+                  <Grid item xs={12} container spacing={1}>
+                    <Grid><InsightsIcon sx={{ fontSize: "40px" }}></InsightsIcon></Grid>
+                    <Grid item xs={4}><Typography variant="h5">Price Prediction</Typography></Grid>
+                  </Grid>
+                  <Grid item xs={4} marginTop={0}><PredictionsChart width={width*0.2}/></Grid>
+                  {/* <div style={{ padding:0, margin:0 }}>
+                    <PredictionsChart></PredictionsChart>
+                  </div> */}
+                  
+                  {/* <Alert
                     severity="info"
                     variant="filled"
                     color="info"
@@ -193,8 +227,8 @@ const TokenModal = (props) => {
                       : prediction
                       ? "This recommendation is based on technical machine learning, and therefore, we advise you to consult with a certified investment advisor."
                       : "Please wait, it might take a few seconds"}
-                  </Alert>
-                </Grid>
+                  </Alert> */}
+                {/* </Grid> */}
               </Grid>
             </CardContent>
           </Card>
