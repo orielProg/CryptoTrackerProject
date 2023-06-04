@@ -3,8 +3,10 @@ import ReactSpeedometer from "react-d3-speedometer/dist/index"
 
 const PredictionsChart = (props) => (
         <ReactSpeedometer
+          // margin={0}
+          // padding={0}
           needleHeightRatio={0.7}
-          width={200}
+          // width={200}
           height={200}
           startColor="#9399ff"
           endColor="#00bbf0"
