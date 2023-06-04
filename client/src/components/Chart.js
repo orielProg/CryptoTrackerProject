@@ -33,13 +33,16 @@ const Chart = (props) => {
   const { enqueueSnackbar } = useSnackbar();
 
 
-  useEffect(async () => {
+  useEffect(() => {
+    async function loadChartFunc(){
       dispatch(loadChart());
       if(error) enqueueSnackbar(error, {
         variant: "error",
       });
       console.log("useEffect",chart);
-  }, [fetchCounter]);
+  }
+  loadChartFunc();
+}, [fetchCounter]);
 
   const data = {
     datasets: [
@@ -82,12 +85,12 @@ const Chart = (props) => {
     <Card sx={{ height: "100%" }}>
       <CardHeader title="Chart" titleTypographyProps={{ variant: "h4" }} />
       <Divider />
-      <Grid container xs={12} justifyContent="center">
+      <Grid container justifyContent="center">
         <Grid item xs={8}>
           <Doughnut data={data} />
         </Grid>
       </Grid>
-      <Grid container xs={12} justifyContent="center">
+      <Grid container justifyContent="center">
         {bottom.map(({ color, title, value, icon }) => (
           <Box
             key={title}

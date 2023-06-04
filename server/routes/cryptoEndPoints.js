@@ -281,10 +281,9 @@ router.get("/get-top-coins", authToken, async (req, res) => {
     });
     currentPrices = response.data;
     currentPrices.forEach((coin, index) => {
-      coin.prediction = predictions[index].prediction;
+      coin.prediction = predictions ? predictions[index].prediction : "test_prediction";
     });
   } catch (err) {
-    console.log(err);
   }
   res.status(200).send(currentPrices);
 });

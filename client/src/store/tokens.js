@@ -37,6 +37,7 @@ const tokensSlice = createSlice({
       state.fetchCounter = action.payload;
     },
     setTokenInfo : (state,action) => {
+      console.log("Setting token info to ", action.payload);
       state.tokenInfo = action.payload;
     }
   },

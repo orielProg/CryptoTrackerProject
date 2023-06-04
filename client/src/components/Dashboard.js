@@ -19,13 +19,13 @@ import Upperbar from "./Upperbar";
 const Dashboard = (props) => {
 
   return (
-    <Grid container xs={12} sx={{ height: "100%"}}>
-      <Grid container xs={12} sx = {{position : "fixed", top : 0, width : "100%"}}>
+    <Grid container  sx={{ height: "100%"}}>
+      <Grid container sx = {{position : "fixed", top : 0, width : "100%"}}>
         <Grid item xs={12}>
             <Upperbar />
         </Grid>
       </Grid>
-      <Grid container xs={12} spacing={3} p= {4} pr = {6} pl = {6} pt = {12}>
+      <Grid container spacing={3} p= {4} pr = {6} pl = {6} pt = {12}>
         <Grid item xs={12}>
           <ContentCard/>
         </Grid>

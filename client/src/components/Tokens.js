@@ -66,21 +66,27 @@ const Tokens = (props) => {
     else successFunction()
   };
 
-  useEffect(async () => {
+  useEffect(() => {
+    async function uploadAndLoadTokensFunc(){
     if (tokens.length === 0) {
       dispatch(uploadAndLoadTokens(page, 7, rowCount, sortingModel))
       if(error) errorFunction()
     }
-  }, []);
+  }
+  uploadAndLoadTokensFunc();
+}, []);
 
-  useEffect(async () => {
+  useEffect(() => {
+    async function firstRunCheck(){
     if(isFirstRun.current){
       isFirstRun.current = false;
       return;
     }
     dispatch(getTokens(page, 7, rowCount, sortingModel));
     if(error) errorFunction()
-  }, [page,sortingModel])
+  }
+  firstRunCheck();
+}, [page,sortingModel])
 
 
   const handleSortModelChange = (newModel) => {
@@ -97,8 +103,8 @@ const Tokens = (props) => {
           titleTypographyProps={{ variant: "h4" }}
           action={
             <Tooltip title="Refresh">
-              <IconButton aria-label="refresh">
-                <RefreshIcon onClick={refreshHandler} />
+              <IconButton aria-label="refresh"  onClick={refreshHandler} >
+                <RefreshIcon/>
               </IconButton>
             </Tooltip>
           }

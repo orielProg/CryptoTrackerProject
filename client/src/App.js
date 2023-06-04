@@ -39,9 +39,12 @@ function App() {
       });
   };
 
-  useEffect(async () => {
+  useEffect(() => {
+    async function loggedInFunc(){
     if (loggedIn) await getPicture();
-  }, []);
+  }
+  loggedInFunc();
+}, []);
 
   return (
     <ThemeProvider theme={theme}>

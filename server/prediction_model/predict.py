@@ -1,7 +1,6 @@
 import numpy as np
 import json
 from sklearn.preprocessing import MinMaxScaler
-import matplotlib.pyplot as plt
 import sys
 import os
 
@@ -39,6 +38,7 @@ from tensorflow.keras.models import Sequential
 from tensorflow.keras.optimizers import Adam
 from tensorflow.keras import layers
 
+
 model = Sequential()
 model.add(layers.LSTM(units=50, return_sequences=True,input_shape=(X.shape[1],1)))
 model.add(layers.Dropout(0.2))
@@ -53,7 +53,7 @@ model.add(layers.Dense(units=1))
 model.compile(loss='mean_squared_error',
               optimizer='adam')
 
-model.fit(X, y,  epochs=7, batch_size=32,verbose=0)
+model.fit(X, y,  epochs=25, batch_size=32,verbose=0)
 
 from copy import deepcopy
 import math
@@ -84,4 +84,4 @@ def get_prediction(predicted_price, current_price):
 current_price = scaler.inverse_transform(np.array(X[-1][-1]).reshape(-1, 1))[0][0]
 prediction = float(scaler.inverse_transform(np.array(recursive_predictions)[-1].reshape(-1, 1))[0][0])
 print(get_prediction(prediction, current_price))
-# os.remove(sys.argv[1])
+os.remove(sys.argv[1]+".json")
