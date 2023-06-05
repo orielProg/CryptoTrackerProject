@@ -147,8 +147,10 @@ const TokenModal = (props) => {
             <Typography variant="h5">Price Prediction</Typography>
           </Grid>
         </Grid>
+        <Grid container justifyContent="center">
         <Grid item xs={4} marginTop={0}>
           <PredictionsChart prediction = {prediction ? marksMap[prediction] : 0}/>
+        </Grid>
         </Grid>
       </Fragment>
     );
@@ -167,7 +169,7 @@ const TokenModal = (props) => {
       aria-describedby="modal-modal-description"
     >
       <Grid container justifyContent="center" style={style}>
-        <Grid item xs={10}>
+        <Grid item xs={8}>
           <Card>
             <CardHeader
               avatar={<Avatar src={image} aria-label="token-image" />}
@@ -183,7 +185,7 @@ const TokenModal = (props) => {
 
             <Divider />
             <CardContent>
-              <TokenChart tokenInfo={props.tokenInfo} />
+              <TokenChart tokenInfo={props.tokenInfo} size={prediction? 7 : 9} />
               <Divider />
               <Grid container justifyContent="center" margin={2}>
               <Fragment>{!prediction ? (<Grid item xs={8}>
