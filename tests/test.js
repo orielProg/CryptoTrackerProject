@@ -7,7 +7,7 @@ const app = require("../server/utils")
 const { MongoMemoryServer } = require("mongodb-memory-server");
 let cookies = null;
 
-describe("all routes", () => {
+describe("Server tests", () => {
   beforeAll(async () => {
     const mongoServer = await MongoMemoryServer.create();
     await mongoose.connect(mongoServer.getUri());
@@ -19,15 +19,15 @@ describe("all routes", () => {
 
   });
 
-  describe("no access token", () => {
-    it("should not access app", async () => {
+  describe("No access token", () => {
+    it("Should not access app", async () => {
       await request(app).get("/app/get-wallets").expect(401);
     })
   })
   
 
-  describe("register route", () => {
-    it("should register a user", async () => {
+  describe("Register route", () => {
+    it("Should register a user", async () => {
       await request(app)
         .post("/register")
         .send({
@@ -38,7 +38,7 @@ describe("all routes", () => {
         }).expect(200);
         
     });
-    it("should not register a user", async () => {
+    it("Should not register a user", async () => {
       await request(app).post("/register").send({
         username: "test123",
         email: "dsadsad",
@@ -49,8 +49,8 @@ describe("all routes", () => {
     })
   });
 
-  describe("login route", () => {
-    it("should login", async () => {
+  describe("Login route", () => {
+    it("Should login", async () => {
       const response = await request(app)
         .post("/login")
         .send({
@@ -59,7 +59,7 @@ describe("all routes", () => {
         }).expect(200);
         cookies = response.headers['set-cookie']
     });
-    it("should not login", async () => {
+    it("Should not login", async () => {
       await request(app).post("/login").send({
         email: "test",
         password: "123456",
@@ -67,8 +67,8 @@ describe("all routes", () => {
     })
   });
 
-  describe("wallets route", () => {
-    it("should change wallets", async () => {
+  describe("Wallets route", () => {
+    it("Should change wallets", async () => {
         await request(app)
             .post("/app/change-wallets").set('Cookie', cookies)
             .send({
@@ -78,7 +78,7 @@ describe("all routes", () => {
             }).expect(200);
         });
 
-        it("should not change wallets", async () => {
+        it("Should not change wallets", async () => {
             await request(app)
                 .post("/app/change-wallets").set('Cookie', cookies)
                 .send({
@@ -88,7 +88,7 @@ describe("all routes", () => {
                 }).expect(406);
             });
 
-        it("should get wallets", async () => {
+        it("Should get wallets", async () => {
             const response = await request(app)
                 .get("/app/get-wallets").set('Cookie', cookies)
                 .expect(200);
@@ -98,15 +98,15 @@ describe("all routes", () => {
 
     })
 
-    describe("tokens route", () => {
-        it("should get token graph", async () => {
+    describe("Tokens route", () => {
+        it("Should get token graph", async () => {
           await request(app).post("/app/get-token-chart").set('Cookie', cookies).send({contractAddress:"eth"}).expect(200);
         });
-        it("should not get token graph", async () => {
+        it("Should not get token graph", async () => {
           await request(app).post("/app/get-token-chart").set('Cookie', cookies).send({contractAddress:"testcoin"}).expect(404);
         });
 
-        it("should get topcoins", async () => {
+        it("Should get topcoins", async () => {
           const response = await request(app).get("/app/get-top-coins").set('Cookie', cookies).expect(200);
           const numOfTopCoins = 7;
           expect(response.body.length).toEqual(numOfTopCoins);
@@ -115,13 +115,13 @@ describe("all routes", () => {
           expect(response.body[0].price_change_percentage_1h_in_currency!==undefined).toEqual(true);
         })
 
-        it("should get prediction for btc", async () => {
-          const validPredictions = ["strong sell", "sell", "neutral", "buy", "strong buy"]
+        it("Should get prediction for btc", async () => {
+          const validPredictions = ["strong sell", "sell", "neutral", "buy", "strong buy","test_prediction"]
           const response = await request(app).get("/app/get-token-prediction?contractAddress=btc").set('Cookie', cookies).expect(200);
           expect(validPredictions.some((prediction) => prediction===response.body.result)).toEqual(true);
       });
 
-      it("should not get prediction", async () => {
+      it("Should not get prediction", async () => {
         const response = await request(app).get("/app/get-token-prediction?contractAddress=test").set('Cookie', cookies).expect(404);
     });
     });

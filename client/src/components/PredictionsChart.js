@@ -3,14 +3,11 @@ import ReactSpeedometer from "react-d3-speedometer/dist/index"
 
 const PredictionsChart = (props) => (
         <ReactSpeedometer
-          // margin={0}
-          // padding={0}
           needleHeightRatio={0.7}
-          // width={200}
           height={200}
           startColor="#9399ff"
           endColor="#00bbf0"
-          value={777}
+          value={props.prediction}
           currentValueText="Prediction"
           customSegmentLabels={[
             {
@@ -43,7 +40,9 @@ const PredictionsChart = (props) => (
           needleTransitionDuration={3333}
           needleTransition="easeElastic"
           needleColor={'#a7ff83'}
-          textColor={'#d8dee9'}></ReactSpeedometer>
+          textColor={'#d8dee9'}
+          minValue = {0}
+          maxValue={100}></ReactSpeedometer>
   );
 
 export default PredictionsChart;

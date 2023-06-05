@@ -39,29 +39,31 @@ const TopTokens = (props) => {
   const dispatch = useDispatch();
   const topCoins = useSelector((state) => state.topCoins.tokens)
   const expirationDate = useSelector((state) => state.topCoins.expirationDate)
-  console.log(topCoins)
   const loading = useSelector((state) => state.topCoins.loading)
 
   const dataHandler = async () => {
     await dispatch(fetchTopCoins());
-    console.log("dd");
   };
 
-  useEffect(async () => {
+  useEffect(() => {
+    async function fetchTopCoinsFunc(){
+
     if(expirationDate<Date.now()){
       await dataHandler();
     }
+  }
+  fetchTopCoinsFunc();
   }, []);
 
   
   return (
-    <Grid container xs={12} sx={{ height: "100%"}}>
-      <Grid container xs={12} sx = {{position : "center", top : 0, width : "100%"}}>
+    <Grid container  sx={{ height: "100%"}}>
+      <Grid container  sx = {{position : "center", top : 0, width : "100%"}}>
         <Grid item xs={12}>
-            <TopTokensUpperbar />
+            <TopTokensUpperbar logoutHandler = {props.logoutHandler}/>
         </Grid>
       </Grid>
-      <Grid container xs={12} spacing={3} p= {4} pr = {6} pl = {6} pt = {12} alignItems={"center"} alignContent={"center"} justifyContent={"center"}>
+      <Grid container spacing={3} p= {4} pr = {6} pl = {6} pt = {12} alignItems={"center"} alignContent={"center"} justifyContent={"center"}>
         <Grid item xs= {8}>
         <Card sx={{ height: "100%" }}>
         <CardHeader

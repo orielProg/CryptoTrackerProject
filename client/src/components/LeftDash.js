@@ -34,7 +34,7 @@ const LeftDash = (props) => {
     setSelected(event.currentTarget.id);
   }
   return (
-    <Grid container xs={12} sx={{ height: "100%" }}>
+    <Grid container sx={{ height: "100%" }}>
       <Grid item xs={12} sx={{ height: "100%",}}>
         <Box
           sx={{ width: "100%", bgcolor: "background.paper", height: "100%" }}

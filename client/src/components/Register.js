@@ -5,6 +5,7 @@ import GoogleIcon from "@mui/icons-material/Google";
 import { Divider } from "@mui/material";
 import { TextField, Card, CardHeader, CardContent, Link } from "@mui/material";
 import { useRef, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import LoadingButton from "@mui/lab/LoadingButton";
 import { GoogleLogin } from "react-google-login";
 import {
@@ -19,6 +20,7 @@ import axios from "axios";
 
 const Register = (props) => {
   const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
   const usernameRef = useRef();
   const emailRef = useRef();
   const passwordRef = useRef();
@@ -58,7 +60,7 @@ const Register = (props) => {
         password,
         confirmPassword,
       })
-      .then((res) => console.log(res))
+      .then((res) => navigate("/login"))
       .catch((err) => alert(err.response.data));
     setLoading(false);
   };
@@ -66,7 +68,6 @@ const Register = (props) => {
   return (
     <Grid
       container
-      xs={12}
       justifyContent={"center"}
       sx={{
         position: "absolute",
@@ -85,7 +86,7 @@ const Register = (props) => {
           ></CardHeader>
           <CardContent>
             <Divider />
-            <Grid container xs={12} pt={2} pb={2}>
+            <Grid container pt={2} pb={2}>
               <TextField
                 margin="normal"
                 fullWidth

@@ -24,12 +24,12 @@ import { Fragment } from "react";
 import ArrowDownwardIcon from "@mui/icons-material/ArrowDownward";
 import ArrowUpwardIcon from "@mui/icons-material/ArrowUpward";
 import { green, red } from "@mui/material/colors";
-import { useState, useEffect } from "react";
+import { useState} from "react";
 import { useDispatch } from "react-redux";
 import { fetchPrediction } from "../store/asyncFunctions";
 import "../theme/customLoading.css";
 import PredictionsChart from "./PredictionsChart";
-import InsightsIcon from '@mui/icons-material/Insights';
+import InsightsIcon from "@mui/icons-material/Insights";
 
 const style = {
   position: "absolute",
@@ -39,7 +39,7 @@ const style = {
 };
 
 const CustomLoadingButton = (
-  <div class="lds-circle">
+  <div className="lds-circle">
     <div></div>
   </div>
 );
@@ -59,7 +59,6 @@ const TokenModal = (props) => {
     props && props.tokenInfo && props.tokenInfo.image
       ? props.tokenInfo.image
       : "";
-  console.log(image);
   const name =
     props && props.tokenInfo && props.tokenInfo.name
       ? props.tokenInfo.name
@@ -78,6 +77,8 @@ const TokenModal = (props) => {
       </Button>
     );
   };
+
+
 
   const marks = [
     {
@@ -132,39 +133,31 @@ const TokenModal = (props) => {
     await dispatch(
       fetchPrediction(props.tokenInfo.contractAddress, setPrediction)
     );
-    console.log("predicting");
     setLoading(false);
-    console.log(prediction);
+  };
+
+  const postPredict = () => {
+    return (
+      <Fragment>
+        <Grid container spacing={1}>
+          <Grid item>
+            <InsightsIcon sx={{ fontSize: "40px" }}></InsightsIcon>
+          </Grid>
+          <Grid item xs={4}>
+            <Typography variant="h5">Price Prediction</Typography>
+          </Grid>
+        </Grid>
+        <Grid item xs={4} marginTop={0}>
+          <PredictionsChart prediction = {prediction ? marksMap[prediction] : 0}/>
+        </Grid>
+      </Fragment>
+    );
   };
 
   const closeModel = () => {
-    console.log("LOLLLL");
     setPrediction("");
     props.handleClose();
   };
-
-  const [windowSize, setWindowSize] = useState({
-    width: window.innerWidth,
-    // height: window.innerHeight,
-  });
-
-  useEffect(() => {
-    const handleResize = () => {
-      setWindowSize({
-        width: window.innerWidth,
-        // height: window.innerHeight,
-      });
-      console.log('changeddd')
-    };
-
-    window.addEventListener('resize', handleResize);
-
-    return () => {
-      window.removeEventListener('resize', handleResize);
-    };
-  }, []);
-
-  const { width } = windowSize;
 
   return (
     <Modal
@@ -173,7 +166,7 @@ const TokenModal = (props) => {
       aria-labelledby="modal-modal-title"
       aria-describedby="modal-modal-description"
     >
-      <Grid container xs={8} justifyContent="center" style={style}>
+      <Grid container justifyContent="center" style={style}>
         <Grid item xs={10}>
           <Card>
             <CardHeader
@@ -192,31 +185,17 @@ const TokenModal = (props) => {
             <CardContent>
               <TokenChart tokenInfo={props.tokenInfo} />
               <Divider />
-              <Grid container xs={12} justifyContent="center" margin={2}>
-                {/* <Grid item xs={12}> */}
-                  <Grid item xs={12} container spacing={1}>
-                    <Grid><InsightsIcon sx={{ fontSize: "40px" }}></InsightsIcon></Grid>
-                    <Grid item xs={4}><Typography variant="h5">Price Prediction</Typography></Grid>
-                  </Grid>
-                  <Grid item xs={4} marginTop={0}><PredictionsChart width={width*0.2}/></Grid>
-                  {/* <div style={{ padding:0, margin:0 }}>
-                    <PredictionsChart></PredictionsChart>
-                  </div> */}
-                  
-                  {/* <Alert
+              <Grid container justifyContent="center" margin={2}>
+              <Fragment>{!prediction ? (<Grid item xs={8}>
+
+                <Alert
                     severity="info"
                     variant="filled"
                     color="info"
                     action={
                       <Fragment>
-                        {!prediction ? (
-                          <Grid container alignItems="center" spacing={1} xs={12}>
-                            <Grid item xs={12}>
-                              <PredictionsChart />
-                            </Grid>
-                          </Grid>
-                        ) : (
-                          predictButton()
+                        {!prediction ? predictButton() : (
+                          "aa"
                         )}
                       </Fragment>
                     }
@@ -227,8 +206,8 @@ const TokenModal = (props) => {
                       : prediction
                       ? "This recommendation is based on technical machine learning, and therefore, we advise you to consult with a certified investment advisor."
                       : "Please wait, it might take a few seconds"}
-                  </Alert> */}
-                {/* </Grid> */}
+                  </Alert>
+                </Grid>) : postPredict()}</Fragment>
               </Grid>
             </CardContent>
           </Card>

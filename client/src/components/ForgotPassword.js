@@ -67,7 +67,7 @@ const ForgotPassword = (props) => {
           ></CardHeader>
           <CardContent>
             <Divider />
-            <Grid container xs={12} pt={2} pb={2}>
+            <Grid container pt={2} pb={2}>
               <TextField
                 margin="normal"
                 fullWidth

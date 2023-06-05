@@ -72,9 +72,8 @@ const TokenChart = (props) => {
     },
   ];
 
-  useEffect(async () => {
-    console.log("Fetching");
-    console.log(buttons.active == 7);
+  useEffect(() => {
+    async function fetchFunc(){
     const active = buttons.active;
     setLoading(buttons.active);
     const days = buttons.active;
@@ -86,31 +85,32 @@ const TokenChart = (props) => {
       .then((result) => setData(result.data))
       .catch((err) => console.log(err));
     setLoading(null);
-  }, [buttons, setLoading]);
+  }
+  fetchFunc();
+}, [buttons, setLoading]);
 
   const clickHandler = (event) => {
     const buttonID = event.currentTarget.id;
-    if (buttons.active === buttonID) return;
+    if (buttons.active == buttonID) return;
     let newLoadingButtons = {
       active: buttonID,
-      1: false,
-      7: false,
-      14: false,
-      30: false,
+      "1": false,
+      "7": false,
+      "14": false,
+      "30": false,
       max: false,
     };
     newLoadingButtons[buttonID] = true;
     setButtons({ ...newLoadingButtons });
   };
-  console.log(loading);
   return (
-    <Grid container xs={12} justifyContent="center">
-      <Grid container xs={12} justifyContent="center" spacing={2}>
+    <Grid container justifyContent="center">
+      <Grid container justifyContent="center" spacing={2}>
         <Grid item>
           <LoadingButton
             variant={buttons[1] ? "contained" : "outlined"}
             loading={loading == 1}
-            id={1}
+            id={"1"}
             onClick={clickHandler}
           >
             24H
@@ -121,7 +121,7 @@ const TokenChart = (props) => {
           <LoadingButton
             variant={buttons[7] ? "contained" : "outlined"}
             loading={loading == 7 ? true : false}
-            id={7}
+            id={"7"}
             onClick={clickHandler}
           >
             7D
@@ -132,9 +132,8 @@ const TokenChart = (props) => {
           <LoadingButton
             variant={buttons[14] ? "contained" : "outlined"}
             loading={loading == 14 ? true : false}
-            id={14}
+            id={"14"}
             onClick={clickHandler}
-            loadingPosition="start"
           >
             14D
           </LoadingButton>
@@ -144,7 +143,7 @@ const TokenChart = (props) => {
           <LoadingButton
             variant={buttons[30] ? "contained" : "outlined"}
             loading={loading == 30}
-            id={30}
+            id={"30"}
             onClick={clickHandler}
           >
             30D

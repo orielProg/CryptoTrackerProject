@@ -17,21 +17,12 @@ const TopTokensUpperbar = (props) => {
   const context = useContext(LoggedInContext);
   const theme = useTheme();
   
-  console.log("Context check", context);
 
   const openDashboard = () => {
     navigate("/")
   };
 
-  const logoutHandler = async () => {
-    await axios
-      .post("/app/logout")
-      .then(() => {
-        context.setLoggedIn(false);
-        navigate("/login");
-      })
-      .catch((err) => console.log(err));
-  };
+
   return (
     <Toolbar
       style={{
@@ -43,7 +34,7 @@ const TopTokensUpperbar = (props) => {
       <Grid container>
         {" "}
         <Tooltip title="Logout">
-          <IconButton onClick={logoutHandler}>
+          <IconButton onClick={props.logoutHandler}>
             <LogoutIcon />
           </IconButton>
         </Tooltip>

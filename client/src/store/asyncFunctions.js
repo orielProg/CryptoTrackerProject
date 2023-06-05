@@ -5,7 +5,6 @@ import tokens, { tokensActions } from "./tokens";
 import { topCoinsActions } from "./topcoins";
 
 export const loadChart = () => {
-  console.log("loading chart with redux");
   return (dispatch) => {
     dispatch(chartActions.setLoading(true));
     axios
@@ -23,7 +22,6 @@ export const loadChart = () => {
 };
 
 export const loadCards = () => {
-  console.log("loading cards with redux");
   return (dispatch) => {
     dispatch(cardsActions.setLoading(true));
     axios

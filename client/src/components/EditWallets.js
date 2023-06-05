@@ -40,10 +40,8 @@ const EditWallets = (props) => {
   const [walletsData, setWalletsData] = useState([]);
   const [selected, setSelected] = useState([]);
   const context = useContext(LoggedInContext);
-  console.log(selected);
 
   const handleToggle = (event) => {
-    console.log("HI");
     const value = event.currentTarget.id;
     const currentIndex = selected.indexOf(value);
     const newSelected = [...selected];
@@ -57,8 +55,9 @@ const EditWallets = (props) => {
     setSelected(newSelected);
   };
 
-  useEffect(async () => {
-    if (walletsData.length !== 0) return;
+  useEffect(() => {
+    async function updateWalletsFunc() {
+      if (walletsData.length !== 0) return;
     await axios
       .get("/app/get-wallets")
       .then((data) => {
@@ -70,13 +69,14 @@ const EditWallets = (props) => {
         })
       );
     setLoading(false);
+    }
+    updateWalletsFunc();
   }, []);
 
   const updateWallets = async () => {
     await axios
       .post("/app/change-wallets", { wallets: walletsData })
       .then(() => {
-        console.log("Updated");
         enqueueSnackbar("Wallets updated successfully!", {
           variant: "success",
         });
@@ -98,7 +98,6 @@ const EditWallets = (props) => {
 
   const deleteWalletsHandler = () => {
     setSelected([]);
-    console.log(selected);
     setWalletsData(walletsData.filter((wallet) => !selected.includes(wallet)));
   };
 
@@ -111,7 +110,6 @@ const EditWallets = (props) => {
       });
       return;
     }
-    console.log(btcRegex.test(newWallet));
     if (
       /^(0x){1}[0-9a-fA-F]{40}$/i.test(newWallet) ||
       btcRegex.test(newWallet)
@@ -126,8 +124,8 @@ const EditWallets = (props) => {
 
   return (
     <Fragment>
-      <Grid container xs={12}>
-        <Grid container xs={12} justifyContent="center">
+      <Grid container >
+        <Grid container justifyContent="center">
           <Grid item xs={5}>
             <Card>
               <CardHeader
@@ -151,7 +149,7 @@ const EditWallets = (props) => {
                   />
                 )}
                 {loading && (
-                  <Grid container xs={12} justifyContent="center">
+                  <Grid container justifyContent="center">
                     <Grid item>
                       <TailSpin
                         height="100"
@@ -164,7 +162,7 @@ const EditWallets = (props) => {
                 )}
               </CardContent>
               <Divider />
-              <Grid container xs={12} justifyContent="right">
+              <Grid container  justifyContent="right">
                 <Grid item padding={1}>
                   <Button variant="contained" onClick={deleteWalletsHandler}>
                     Delete selected wallets
@@ -186,8 +184,8 @@ const EditWallets = (props) => {
         aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-description"
       >
-        <Grid container xs={4} justifyContent="center" style={style}>
-          <Grid item xs={12}>
+        <Grid container justifyContent="center" style={style}>
+          <Grid item xs={5}>
             <Card>
               <CardHeader
                 title="Add a new wallet"
@@ -210,7 +208,7 @@ const EditWallets = (props) => {
                 />
               </CardContent>
               <Divider />
-              <Grid container xs={12} justifyContent="right">
+              <Grid container justifyContent="right">
                 <Grid item padding={1}>
                   <Button
                     variant="contained"
