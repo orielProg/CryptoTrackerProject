@@ -27,6 +27,7 @@ const colorsArray = ["#3F51B5", "#E53935", "#FB8C00"];
 const Chart = (props) => {
   const dispatch = useDispatch();
   const chart = useSelector((state) => state.chart.chart)
+  const tokens = useSelector((state) => state.tokens.tokens);
   const fetchCounter = useSelector((state) => state.tokens.fetchCounter);
   const error = useSelector((state) => state.chart.error)
   const theme = useTheme();
@@ -39,10 +40,9 @@ const Chart = (props) => {
       if(error) enqueueSnackbar(error, {
         variant: "error",
       });
-      console.log("useEffect",chart);
   }
   loadChartFunc();
-}, [fetchCounter]);
+}, [fetchCounter,tokens]);
 
   const data = {
     datasets: [

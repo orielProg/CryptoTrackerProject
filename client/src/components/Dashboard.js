@@ -22,7 +22,7 @@ const Dashboard = (props) => {
     <Grid container  sx={{ height: "100%"}}>
       <Grid container sx = {{position : "fixed", top : 0, width : "100%"}}>
         <Grid item xs={12}>
-            <Upperbar />
+            <Upperbar logoutHandler = {props.logoutHandler}/>
         </Grid>
       </Grid>
       <Grid container spacing={3} p= {4} pr = {6} pl = {6} pt = {12}>

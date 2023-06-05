@@ -74,8 +74,6 @@ const TokenChart = (props) => {
 
   useEffect(() => {
     async function fetchFunc(){
-    console.log("Fetching");
-    console.log(buttons.active == 7);
     const active = buttons.active;
     setLoading(buttons.active);
     const days = buttons.active;
@@ -105,7 +103,6 @@ const TokenChart = (props) => {
     newLoadingButtons[buttonID] = true;
     setButtons({ ...newLoadingButtons });
   };
-  console.log(loading);
   return (
     <Grid container justifyContent="center">
       <Grid container justifyContent="center" spacing={2}>

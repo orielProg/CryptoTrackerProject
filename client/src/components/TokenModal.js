@@ -49,7 +49,6 @@ const TokenModal = (props) => {
   const [prediction, setPrediction] = useState("");
   const dispatch = useDispatch();
   const open = props.tokenInfo ? true : false;
-  console.log("open is " + open);
   const price =
     props && props.tokenInfo && props.tokenInfo.price
       ? props.tokenInfo.price
@@ -60,7 +59,6 @@ const TokenModal = (props) => {
     props && props.tokenInfo && props.tokenInfo.image
       ? props.tokenInfo.image
       : "";
-  console.log(image);
   const name =
     props && props.tokenInfo && props.tokenInfo.name
       ? props.tokenInfo.name
@@ -135,9 +133,7 @@ const TokenModal = (props) => {
     await dispatch(
       fetchPrediction(props.tokenInfo.contractAddress, setPrediction)
     );
-    console.log("predicting");
     setLoading(false);
-    console.log(prediction);
   };
 
   const postPredict = () => {
@@ -159,7 +155,6 @@ const TokenModal = (props) => {
   };
 
   const closeModel = () => {
-    console.log("LOLLLL");
     setPrediction("");
     props.handleClose();
   };

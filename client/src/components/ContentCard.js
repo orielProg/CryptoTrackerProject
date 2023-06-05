@@ -29,6 +29,7 @@ const DownwardTrend = <ArrowDownwardIcon sx={{ color: red[500] }} />;
 const ContentCard = (props) => {
   const dispatch = useDispatch();
   const fetchCounter = useSelector((state) => state.tokens.fetchCounter);
+  const tokens = useSelector((state) => state.tokens.tokens);
   const cardsDynamicElements = useSelector((state) => state.cards.cards);
   const error = useSelector((state) => state.cards.error);
   const cards =
@@ -41,7 +42,6 @@ const ContentCard = (props) => {
 
   useEffect(() => {
     async function loadCardsFunc() {
-      console.log("Fetching cards");
       dispatch(loadCards());
       if (error)
         enqueueSnackbar(error, {
@@ -49,7 +49,7 @@ const ContentCard = (props) => {
         });
     }
     loadCardsFunc();
-  }, [fetchCounter]);
+  }, [fetchCounter,tokens]);
 
   return (
     <Grid container spacing={2}>

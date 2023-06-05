@@ -35,7 +35,6 @@ const ChangePassword = (props) => {
     const newPassword = newPasswordRef.current.value;
     const newPasswordConfirm = newPasswordConfirmRef.current.value;
     let errorFlag = false;
-    console.log(oldPasswordRef.current);
     if (newPasswordConfirm !== newPassword) {
       setNewPasswordConfirmValidation({
         error: true,

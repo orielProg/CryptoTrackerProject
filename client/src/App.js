@@ -18,6 +18,7 @@ import Dashboard from "./components/Dashboard";
 import Settings from "./components/Settings";
 import TopTokens from "./components/TopTokens";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 
 export const LoggedInContext = createContext();
@@ -27,6 +28,16 @@ export const LoggedInContext = createContext();
 function App() {
   const [picture, setPicture] = useState("");
   const [loggedIn, setLoggedIn] = useState(Cookies.get("loggedIn"));
+
+  const logoutHandler = async () => {
+    await axios
+      .post("/app/logout")
+      .then(() => {
+        setLoggedIn(false);
+        window.open("/login", "_self")
+      })
+      .catch((err) => console.log(err));
+  };
 
   const getPicture = async () => {
     await axios
@@ -73,8 +84,8 @@ function App() {
             {loggedIn && (
               <Routes>
               <Route path="/settings" element={<Settings />} />
-                <Route path="/" element={<Dashboard />} />
-                <Route path="/recommended" element={<TopTokens />} />
+                <Route path="/" element={<Dashboard logoutHandler = {logoutHandler}/>} />
+                <Route path="/recommended" element={<TopTokens logoutHandler = {logoutHandler}/>} />
                 <Route path="*" element={<Navigate to="/" replace />} />
               </Routes>
             )}

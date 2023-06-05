@@ -46,7 +46,6 @@ const Login = (props) => {
   };
 
   const googleLogin = async (res) => {
-    console.log(res);
     await axios
       .post("/google-login", {
         googleID: res.googleId,
@@ -60,7 +59,6 @@ const Login = (props) => {
   return (
     <Grid
       container
-      xs={12}
       justifyContent={"center"}
       sx={{
         position: "absolute",
@@ -84,7 +82,7 @@ const Login = (props) => {
               onSuccess={(res) => googleLogin(res)}
               onFailure={(res) => console.log(res)}
               render={(renderProps) => (
-                <Grid container xs={12} justifyContent={"center"} pb={3}>
+                <Grid container justifyContent={"center"} pb={3}>
                   <Grid item xs={8}>
                     <Button
                       variant="contained"
@@ -102,7 +100,7 @@ const Login = (props) => {
             />
 
             <Divider>or login with email address</Divider>
-            <Grid container xs={12} pt={2} pb={2}>
+            <Grid container pt={2} pb={2}>
               <TextField
                 margin="normal"
                 fullWidth
