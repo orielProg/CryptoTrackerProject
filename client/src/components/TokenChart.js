@@ -161,7 +161,7 @@ const TokenChart = (props) => {
           </LoadingButton>
         </Grid>
       </Grid>
-      <Grid item xs={9}>
+      <Grid item xs={props.size}>
         <Chart options={state.options} series={series} type="area"></Chart>
       </Grid>
     </Grid>
