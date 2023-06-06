@@ -2,7 +2,7 @@
   "name": "cryptotrackerr",
   "version": "0.1.0",
   "private": true,
-  "proxy": "http://127.0.0.1:5000",
+  "proxy": "http://backend:5000",
   "dependencies": {
     "@emotion/react": "^11.8.2",
     "@emotion/styled": "^11.8.1",
@@ -40,14 +40,14 @@
     "test": "jest",
     "eject": "react-scripts eject"
   },
-  "jest":{
-    "moduleNameMapper":{
-         "\\.(css|less|sass|scss)$": "<rootDir>/config/CSSStub.js"
+  "jest": {
+    "moduleNameMapper": {
+      "\\.(css|less|sass|scss)$": "<rootDir>/config/CSSStub.js"
     },
     "globals": {
       "window": {}
     }
-},
+  },
   "eslintConfig": {
     "extends": [
       "react-app",
