@@ -17,14 +17,16 @@ for result in results:
         result.split(",current")[1].split(",")[0].split(":")[1].strip()
     )
     prediction = float(result.split(",current")[1].split(",")[1].split(":")[1].strip())
-    realprice_after_day = float(
+    realprice_after_10h = float(
         result.split(",current")[1].split(",")[2].split(":")[1].split("real")[0].strip()
     )
+    realprice_after_24h = float(result.split(",current")[1].split(",")[2].split(":")[2].strip())
     tests.append(
         {
             "current_price": current_price,
             "prediction": prediction,
-            "real prediction after 10h": realprice_after_day,
+            "real prediction after 10h": realprice_after_10h,
+            "real prediction after 24h": realprice_after_24h,
             **test,
         }
     )
@@ -65,9 +67,26 @@ def is_successful(test):
         return True
     return False
 
+def get_prediction(predicted_price, current_price):
+        change = ((predicted_price - current_price) / current_price)*100
+        if abs(change) < 1:
+            return "neutral"
+        if change >= 1 and change < 4:
+            return "buy"
+        if change >= 4:
+            return "strong buy"
+        if change <= -1 and change > -4:
+            return "sell"
+        return "strong sell"
+
+def is_successful2(test):
+    if(get_prediction(test["prediction"],test["current_price"]) == get_prediction(test["real prediction after 24h"],test["current_price"])):
+        return True
+    return False
+
 
 for test in tests:
-    test["successful"] = is_successful(test)
+    test["successful"] = is_successful2(test)
 
 results = tests
 keys1 = ["dropout", "epoch", "loss","batch_size"]
@@ -101,7 +120,7 @@ for a1 in a:
 b = list(a.items())
 b.sort(key=lambda x: x[1]["success_rate"],reverse=True)
 
-with open("a_results2.txt", 'w') as file:
+with open("a_results24h.txt", 'w') as file:
     # Iterate over the array and write each element to the file
     for element in b:
         file.write(str(element) + '\n')  # Write the element followed by a newline character

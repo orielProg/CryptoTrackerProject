@@ -1,0 +1,23 @@
+FROM python:3.9.13
+
+WORKDIR /usr/src/app/server
+COPY requirements.txt .
+RUN pip install --upgrade pip
+RUN pip3 install --upgrade pip setuptools && \
+    pip3 install -r requirements.txt
+RUN apt-get update
+RUN apt-get install xz-utils
+RUN apt-get -y install curl
+RUN curl https://nodejs.org/dist/v14.15.4/node-v14.15.4-linux-x64.tar.xz -O
+RUN tar -xf node-v14.15.4-linux-x64.tar.xz
+RUN ln -s /node-v14.15.4-linux-x64/bin/node /usr/local/bin/node
+RUN ln -s /node-v14.15.4-linux-x64/bin/npm /usr/local/bin/npm
+RUN ln -s /node-v14.15.4-linux-x64/bin/npx /usr/local/bin/npx
+RUN apt-get -y install npm
+COPY . .
+RUN npm install
+
+WORKDIR /usr/src/app
+
+EXPOSE 5000
+CMD [ "node", "./server/index.js" ]
