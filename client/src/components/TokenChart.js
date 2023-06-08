@@ -78,7 +78,7 @@ const TokenChart = (props) => {
     setLoading(buttons.active);
     const days = buttons.active;
     await axios
-      .post("/app/get-token-chart", {
+      .post("/api/app/get-token-chart", {
         contractAddress: props.tokenInfo.contractAddress,
         days,
       })

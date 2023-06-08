@@ -51,7 +51,7 @@ const ChangePassword = (props) => {
     } else setNewPasswordValidation({ ...initialValidationState });
     if (errorFlag) return;
     await axios
-      .post("/app/change-password", { oldPassword, newPassword })
+      .post("/api/app/change-password", { oldPassword, newPassword })
       .then(() => {
         setNewPasswordConfirmValidation({ ...initialValidationState });
         setNewPasswordValidation({ ...initialValidationState });

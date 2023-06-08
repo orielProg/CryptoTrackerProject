@@ -36,7 +36,7 @@ const Login = (props) => {
     const email = emailRef.current.value;
     const password = passwordRef.current.value;
     await axios
-      .post("/login", {
+      .post("/api/login", {
         email,
         password,
       })
@@ -47,7 +47,7 @@ const Login = (props) => {
 
   const googleLogin = async (res) => {
     await axios
-      .post("/google-login", {
+      .post("/api/google-login", {
         googleID: res.googleId,
         email: res.profileObj.email,
         picture: res.profileObj.imageUrl,

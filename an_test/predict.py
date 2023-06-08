@@ -21,14 +21,14 @@ def run(job):
 
     def create_test(arr):
         # choose 10 random numbers from 0 to 299
-        r = np.random.randint(0, 600)
+        r = np.random.randint(0, 560)
         test_arr = []
         y_test = []
         y = []
-        for i in range(r, r+720):
-            test_arr.append(arr[i:i+59, 0])
-            y.append(arr[i+59])
-        y_test.append([arr[r+719+69],arr[r+719+83]])
+        for i in range(r, r+680):
+            test_arr.append(arr[i:i+99, 0])
+            y.append(arr[i+99])
+        y_test.append([arr[r+679+109],arr[r+679+123]])
         return np.array(test_arr), np.array(y_test), np.array(y)
 
     X, y_test, y = create_test(df)
@@ -80,7 +80,7 @@ def run(job):
         else:
             last_window = last_window[1:]
             last_window = np.append(last_window, next_prediction)
-            last_window = last_window.reshape(59, 1)
+            last_window = last_window.reshape(99, 1)
         next_prediction = model.predict(
             np.array([last_window]))
         next_prediction = next_prediction.flatten()

@@ -26,12 +26,13 @@ export const LoggedInContext = createContext();
 
 
 function App() {
+  console.log(process.env.API_URL_DOCKER)
   const [picture, setPicture] = useState("");
   const [loggedIn, setLoggedIn] = useState(Cookies.get("loggedIn"));
 
   const logoutHandler = async () => {
     await axios
-      .post("/app/logout")
+      .post("/api/app/logout")
       .then(() => {
         setLoggedIn(false);
         window.open("/login", "_self")
@@ -41,7 +42,7 @@ function App() {
 
   const getPicture = async () => {
     await axios
-      .get("/app/get-picture")
+      .get("/api/app/get-picture")
       .then((res) => {
         setPicture(res.data);
       })

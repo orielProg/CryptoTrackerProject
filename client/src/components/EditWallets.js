@@ -59,7 +59,7 @@ const EditWallets = (props) => {
     async function updateWalletsFunc() {
       if (walletsData.length !== 0) return;
     await axios
-      .get("/app/get-wallets")
+      .get("/api/app/get-wallets")
       .then((data) => {
         setWalletsData(data.data);
       })
@@ -75,7 +75,7 @@ const EditWallets = (props) => {
 
   const updateWallets = async () => {
     await axios
-      .post("/app/change-wallets", { wallets: walletsData })
+      .post("/api/app/change-wallets", { wallets: walletsData })
       .then(() => {
         enqueueSnackbar("Wallets updated successfully!", {
           variant: "success",

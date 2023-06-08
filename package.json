@@ -5,7 +5,7 @@
   "main": "server\\index.js",
   "scripts": {
     "test": "cross-env NODE_ENV=test jest --testTimeout=50000 --detectOpenHandles --forceExit",
-    "client": "cd client && npm start",
+    "client": "cd client && npm start --proxy http://localhost:5000",
     "server": "node ./server/index.js",
     "dev": "concurrently --kill-others-on-fail \"npm run server\" \"npm run client\"",
     "start": "node server\\index.js"

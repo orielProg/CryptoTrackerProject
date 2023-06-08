@@ -288,4 +288,9 @@ router.get("/get-top-coins", authToken, async (req, res) => {
   res.status(200).send(currentPrices);
 });
 
+router.get("/health", (req, res) => {
+  console.log("Health check");
+  res.status(200).send("OK");
+});
+
 module.exports = router;
