@@ -41,7 +41,6 @@ router.get("/fetch-tokens", authToken, async (req, res, next) => {
     return res.status(400).send(err.message);
   }
   console.log("Why?");
-
   const update = { latestData: data };
   await User.findOneAndUpdate(filter, update);
   res.status(200).send({});
@@ -286,6 +285,11 @@ router.get("/get-top-coins", authToken, async (req, res) => {
   } catch (err) {
   }
   res.status(200).send(currentPrices);
+});
+
+router.get("/health", (req, res) => {
+  console.log("Health check");
+  res.status(200).send("OK");
 });
 
 module.exports = router;

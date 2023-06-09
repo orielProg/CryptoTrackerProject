@@ -33,7 +33,7 @@ const PasswordRecover = (props) => {
 
     useEffect(() => {
       async function fetchResetPassword() {
-        const url = "/password-reset/" + id + "/" + token;
+        const url = "/api/password-reset/" + id + "/" + token;
       try {
         await axios.get(url);
         setAllowed(true);
@@ -54,7 +54,7 @@ const PasswordRecover = (props) => {
       return;
     }
     try {
-      await axios.post("/change-password", {
+      await axios.post("/api/change-password", {
         password,
         confirmPassword,
         token,

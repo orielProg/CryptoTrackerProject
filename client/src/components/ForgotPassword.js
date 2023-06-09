@@ -27,7 +27,7 @@ const ForgotPassword = (props) => {
       setLoading(true);
     const email = emailRef.current.value;
     try {
-      await axios.post("/password-reset", { email });
+      await axios.post("/api/password-reset", { email });
       enqueueSnackbar("Recovery email sent", { variant: "success" });
     } catch (error) {
       if (error.response && error.response.data)

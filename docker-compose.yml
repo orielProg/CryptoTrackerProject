@@ -1,0 +1,26 @@
+version: "3.3"
+services:
+  backend:
+    build: server/.
+    image: 'docker.io/cryptotrackerr-backend'
+    labels:
+      kompose.service.type: LoadBalancer
+    container_name: backend
+    ports:
+    - "5000:5000"
+  frontend:
+    build: client/.
+    image : 'docker.io/library/frontend'
+    environment:
+    - API_URL_DOCKER=http://backend:5000/
+    labels:
+      kompose.service.type: LoadBalancer
+    container_name: frontend
+    ports:
+    - "3000:3000"
+  top-coins-service:
+    container_name: top-coins-service
+    build: topcoins_service/.
+  price-diff-service:
+    container_name: price-diff-service
+    build: price_diff_service/.

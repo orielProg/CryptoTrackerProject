@@ -8,7 +8,7 @@ export const loadChart = () => {
   return (dispatch) => {
     dispatch(chartActions.setLoading(true));
     axios
-      .get("/app/chart")
+      .get("/api/app/chart")
       .then((res) => {
         dispatch(chartActions.updateChart(res.data));
       })
@@ -25,7 +25,7 @@ export const loadCards = () => {
   return (dispatch) => {
     dispatch(cardsActions.setLoading(true));
     axios
-      .get("/app/cards")
+      .get("/api/app/cards")
       .then((res) => {
         dispatch(cardsActions.updateCards(res.data));
       })
@@ -41,7 +41,7 @@ export const loadCards = () => {
 const uploadTokensToDB = (dispatch) => {
   dispatch(tokensActions.setLoading(true));
   return axios
-    .get("/app/fetch-tokens")
+    .get("/api/app/fetch-tokens")
     .then(() => {
       dispatch(tokensActions.setFetchCounter(1));
     })
@@ -55,7 +55,7 @@ const uploadTokensToDB = (dispatch) => {
 const loadTokens = (dispatch, page, itemsPerPage, rowCount, sortingModel) => {
   dispatch(tokensActions.setLoading(true));
   return axios
-    .post("/app/get-tokens", { page, itemsPerPage, rowCount, sortingModel })
+    .post("/api/app/get-tokens", { page, itemsPerPage, rowCount, sortingModel })
     .then((res) => {
       dispatch(tokensActions.setLoading(false));
       dispatch(tokensActions.updateTokens(res.data.assets));
@@ -99,7 +99,7 @@ export const checkIfCanBeCharted = (contractAddress,infoPopUp) => {
       return;
     }
     return axios
-      .post("/app/check-contract-address", { contractAddress })
+      .post("/api/app/check-contract-address", { contractAddress })
       .then((data) =>
         dispatch(tokensActions.setTokenInfo({ ...data.data, contractAddress }))
       ).catch(error => {
@@ -111,7 +111,7 @@ export const checkIfCanBeCharted = (contractAddress,infoPopUp) => {
 export const fetchPrediction = (contractAddress, setPrediction) => {
   return (dispatch) => {
     return axios
-      .get("/app/get-token-prediction",{params : {contractAddress}})
+      .get("/api/app/get-token-prediction",{params : {contractAddress}})
       .then((data) =>
         dispatch(() => {setPrediction(data.data.result)})
       ).catch(error => {
@@ -124,7 +124,7 @@ export const fetchTopCoins = () => {
   return (dispatch) => {
     dispatch(topCoinsActions.setLoading(true));
     axios
-      .get("/app/get-top-coins")
+      .get("/api/app/get-top-coins")
       .then((res) => {
         dispatch(topCoinsActions.setExpirationDate(Date.now()+600000))
         dispatch(topCoinsActions.setTopCoins(res.data));

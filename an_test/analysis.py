@@ -3,7 +3,7 @@ import itertools
 
 results = []
 tests = []
-with open("results2.txt", "r") as file:
+with open("window100_resultsofbest", "r") as file:
     # Iterate over each line in the file
     for line in file:
         # Process each line
@@ -80,7 +80,7 @@ def get_prediction(predicted_price, current_price):
         return "strong sell"
 
 def is_successful2(test):
-    if(get_prediction(test["prediction"],test["current_price"]) == get_prediction(test["real prediction after 24h"],test["current_price"])):
+    if(get_prediction(test["prediction"],test["current_price"]) == get_prediction(test["real prediction after 10h"],test["current_price"])):
         return True
     return False
 
@@ -120,7 +120,7 @@ for a1 in a:
 b = list(a.items())
 b.sort(key=lambda x: x[1]["success_rate"],reverse=True)
 
-with open("a_results24h.txt", 'w') as file:
+with open("window100_resultsofbest.after", 'w') as file:
     # Iterate over the array and write each element to the file
     for element in b:
         file.write(str(element) + '\n')  # Write the element followed by a newline character

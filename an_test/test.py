@@ -15,18 +15,18 @@ cg = CoinGeckoAPI()
 
 coins = ["bitcoin", "ethereum"]
 
-num_of_tests_per_coin = 10
-losses = ["mean_absolute_error", "mean_squared_error"]
-epoches = [7, 10, 20, 30]
-batch_sizes = [16, 32, 64]
-dropouts = [0.1, 0.2, 0.3]
+num_of_tests_per_coin = 200
+losses = ["mean_squared_error"]
+epoches = [30]
+batch_sizes = [64]
+dropouts = [0.3]
 
 
 def download_files():
     for coin in coins:
         with open(coin+".json", 'w') as outfile:
             json.dump(cg.get_coin_market_chart_by_id(
-                coin, "usd", "60d"), outfile)
+                coin, "usd", "100d"), outfile)
 
 
 def create_jobs():
@@ -49,15 +49,16 @@ def create_jobs():
         json.dump(jobs, outfile)
     print(len(jobs))
 
-# create_jobs()
-# download_files()
+#download_files()
+
+#create_jobs()
 
 
 jobs = json.load(open("jobs.json"))
 for job in jobs:
     result = predict.run(job)
     print(result)
-    with open("results2", "a") as f:
+    with open("window100_resultsofbest", "a") as f:
         f.write(str(jobs[0])+","+result+"\n")
     jobs = jobs[1:]
     with open("jobs" + '.json', 'w') as outfile:

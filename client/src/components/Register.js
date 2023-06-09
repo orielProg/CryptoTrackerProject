@@ -54,7 +54,7 @@ const Register = (props) => {
       return;
     }
     await axios
-      .post("/register", {
+      .post("/api/register", {
         username,
         email,
         password,
