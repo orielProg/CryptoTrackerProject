@@ -7,7 +7,7 @@ const activateWorkers = (wallets) => {
   return new Promise((resolve, reject) => {
     let result = [];
     wallets.forEach((wallet) => {
-      const worker = new Worker("./server/crypto/crypto_worker.js", {
+      const worker = new Worker("./crypto_worker.js", {
         workerData: { wallet: wallet },
       });
       worker.on("message", (assets) => {

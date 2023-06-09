@@ -18,6 +18,8 @@
 .env.test.local
 .env.production.local
 /topcoins_service/.env
+/price_diff_service/.env
+/price_diff_service/node_modules
 
 npm-debug.log*
 yarn-debug.log*

@@ -95,9 +95,9 @@ const ContentCard = (props) => {
                   <Grid item>
                     <Typography variant="body2">
                       {element.trendValue === "0%" || element.trendValue === 0
-                        ? "No changes"
+                        ? ""
                         : element.trendValue}{" "}
-                      since last check
+        {element.alt === "nft" ? "" : "in the last day"}
                     </Typography>
                   </Grid>
                 </Grid>

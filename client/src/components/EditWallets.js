@@ -12,6 +12,7 @@ import {
 import { Fragment, useState } from "react";
 import UpperbarSettings from "./UpperbarSettings";
 import AddIcon from "@mui/icons-material/Add";
+import { useDispatch, useSelector } from "react-redux";
 import { useRef } from "react";
 import CloseIcon from "@mui/icons-material/Close";
 import WalletsList from "./WalletsList";
@@ -20,6 +21,10 @@ import { useEffect, useContext } from "react";
 import { LoggedInContext } from "../App";
 import { useSnackbar } from "notistack";
 import { TailSpin } from "react-loader-spinner";
+import { tokensActions } from "../store/tokens";
+import {
+  uploadAndLoadTokens, getTokens, checkIfCanBeCharted
+} from "../store/asyncFunctions";
 
 const style = {
   position: "absolute",
@@ -34,12 +39,16 @@ const btcRegex = new RegExp(
 
 const EditWallets = (props) => {
   const [open, setOpen] = useState(false);
+  const dispatch = useDispatch();
   const [loading, setLoading] = useState(true);
   const { enqueueSnackbar } = useSnackbar();
   const walletRef = useRef("");
   const [walletsData, setWalletsData] = useState([]);
   const [selected, setSelected] = useState([]);
   const context = useContext(LoggedInContext);
+  const rowCount = useSelector((state) => state.tokens.rowCount);
+  const sortingModel = useSelector((state) => state.tokens.sortingModel);
+  const page = useSelector((state) => state.tokens.page);
 
   const handleToggle = (event) => {
     const value = event.currentTarget.id;
@@ -80,6 +89,7 @@ const EditWallets = (props) => {
         enqueueSnackbar("Wallets updated successfully!", {
           variant: "success",
         });
+        dispatch(uploadAndLoadTokens(page, 7, rowCount, sortingModel))
       })
       .catch((error) => {
         if (error.response && error.response.data)

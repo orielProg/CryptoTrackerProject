@@ -41,7 +41,6 @@ router.get("/fetch-tokens", authToken, async (req, res, next) => {
     return res.status(400).send(err.message);
   }
   console.log("Why?");
-
   const update = { latestData: data };
   await User.findOneAndUpdate(filter, update);
   res.status(200).send({});

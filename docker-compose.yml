@@ -21,3 +21,6 @@ services:
   top-coins-service:
     container_name: top-coins-service
     build: topcoins_service/.
+  price-diff-service:
+    container_name: price-diff-service
+    build: price_diff_service/.

@@ -60,19 +60,20 @@ const Tokens = (props) => {
     if (sortingModel.length === 0) {
       return;
     }
+    console.log(page, 7, rowCount, sortingModel);
     dispatch(uploadAndLoadTokens(page, 7, rowCount, sortingModel))
     if(error) errorFunction()
     else successFunction()
   };
 
   useEffect(() => {
-    async function uploadAndLoadTokensFunc(){
+    async function loadTokensFunc(){
     if (tokens.length === 0) {
-      dispatch(uploadAndLoadTokens(page, 7, rowCount, sortingModel))
+      dispatch(getTokens(page, 7, rowCount, sortingModel))
       if(error) errorFunction()
     }
   }
-  uploadAndLoadTokensFunc();
+  loadTokensFunc();
 }, []);
 
   useEffect(() => {
