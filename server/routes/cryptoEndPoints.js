@@ -201,6 +201,7 @@ router.post("/change-wallets", authToken, async (req, res, next) => {
     });
   }
   await User.findOneAndUpdate({ _id: _id }, { wallets: newWallets });
+  await User.findOneAndUpdate({ _id: _id }, { $set: { 'latestData.fetchTime': 0 } });
   return res.status(200).send("Wallets updated");
 });
 
@@ -263,7 +264,6 @@ router.get("/get-token-prediction", authToken, async (req, res) => {
 
 router.get("/get-top-coins", authToken, async (req, res) => {
   const predictions = await TopCoin.find();
-  let currentPrices = [];
   res.status(200).send(predictions);
 });
 
