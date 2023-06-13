@@ -16,7 +16,6 @@ const activateWorkers = (wallets) => {
         if (counter >= wallets.length) resolve(result);
       });
       worker.on("error", (err) => {
-        console.log("Worker got the error");
         reject(err);
       });
     });
@@ -25,7 +24,6 @@ const activateWorkers = (wallets) => {
 
 const calculateChartData = (eth, erc20, nft, btc) => {
   let total = eth + erc20 + nft + btc;
-  console.log(((eth + erc20 / total) * 100).toFixed(0), "HELLO");
   return [
     {
       type: "btc",
@@ -103,10 +101,8 @@ const getAssets = async (wallets, id) => {
         mainAssets = result;
       })
       .catch((err) => {
-        console.log("Got the error bruh");
         throw err;
       });
-  console.log("Trying although");
   if (!flag) mainAssets = mergeAssets(mainAssets);
   mainAssets = await calculateTotal(mainAssets, id);
   mainAssets = await getBtcAndEthData(mainAssets);
@@ -127,7 +123,6 @@ const calculateTotal = async (mainAssets) => {
     erc20Total = 0,
     nftTotal = 0,
     btcTotal = 0;
-  console.log(mainAssets);
   let NFTtokens = 0,
     eth =
       Object.keys(mainAssets).length !== 0 && mainAssets.eth
@@ -145,7 +140,6 @@ const calculateTotal = async (mainAssets) => {
     if (!value.price) value.price = 0;
     if (mainAssets[key].price) {
       total = +(value.amount * value.price).toFixed(2);
-      console.log(key, total);
       mainAssets[key].price = parseFloat(mainAssets[key].price.toFixed(2));
       if (total && value.type === "eth") ethTotal += parseInt(total);
       else if (total && value.type === "erc20") erc20Total += parseInt(total);
@@ -164,7 +158,7 @@ const calculateTotal = async (mainAssets) => {
         "$" + (ethTotal + erc20Total + nftTotal + btcTotal).toLocaleString(),
       number: ethTotal + erc20Total + nftTotal + btcTotal,
       trend: totalTrend >= 0 ? "up" : "down",
-      trendValue: totalTrend.toFixed(2) + "%",
+      trendValue: Math.abs(totalTrend).toFixed(2) + "%",
     },
     {
       value: btc,

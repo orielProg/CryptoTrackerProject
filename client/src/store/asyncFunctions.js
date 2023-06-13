@@ -59,7 +59,7 @@ const loadTokens = (dispatch, page, itemsPerPage, rowCount, sortingModel) => {
     .then((res) => {
       dispatch(tokensActions.setLoading(false));
       dispatch(tokensActions.updateTokens(res.data.assets));
-      if (rowCount === 0) dispatch(tokensActions.setRowCount(res.data.size));
+      dispatch(tokensActions.setRowCount(res.data.size));
     })
     .catch((err) => {
       if (err && err.response && err.response.message)

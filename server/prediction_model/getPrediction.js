@@ -19,7 +19,7 @@ var os = new os_func();
 
 const getPrediction = async(fileName) => {
     try{
-        return (await os.execCommand(`python3 ./server/prediction_model/predict.py ${fileName}`)).replace(/(\r\n|\n|\r)/gm, "")
+        return (await os.execCommand(`python -c "import sys; sys.path.append('./server/prediction_model'); import predict;  predict.run_production()" ${fileName}`)).replace(/(\r\n|\n|\r)/gm, "")
     }
     catch(e){
         console.log(e)

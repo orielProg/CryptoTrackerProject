@@ -1,6 +1,8 @@
 import ArrowDownwardIcon from "@mui/icons-material/ArrowDownward";
 import ArrowUpwardIcon from "@mui/icons-material/ArrowUpward";
 import {green,red} from "@mui/material/colors"
+import React from 'react';
+
 
 export const data = [
     {

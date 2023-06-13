@@ -30,6 +30,7 @@ const Tokens = (props) => {
   const { enqueueSnackbar } = useSnackbar();
   const page = useSelector((state) => state.tokens.page);
   const rowCount = useSelector((state) => state.tokens.rowCount);
+  console.log(rowCount)
   const tokenInfo = useSelector((state) => state.tokens.tokenInfo);
   const sortingModel = useSelector((state) => state.tokens.sortingModel);
 
@@ -60,20 +61,19 @@ const Tokens = (props) => {
     if (sortingModel.length === 0) {
       return;
     }
-    console.log(page, 7, rowCount, sortingModel);
     dispatch(uploadAndLoadTokens(page, 7, rowCount, sortingModel))
     if(error) errorFunction()
     else successFunction()
   };
 
   useEffect(() => {
-    async function loadTokensFunc(){
+    async function uploadAndLoadTokensFunc(){
     if (tokens.length === 0) {
-      dispatch(getTokens(page, 7, rowCount, sortingModel))
+      dispatch(uploadAndLoadTokens(page, 7, rowCount, sortingModel))
       if(error) errorFunction()
     }
   }
-  loadTokensFunc();
+  uploadAndLoadTokensFunc();
 }, []);
 
   useEffect(() => {
