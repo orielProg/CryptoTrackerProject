@@ -40,15 +40,14 @@ def get_coins_predictions(coins_data, new=False):
 def upload_data_to_db(coins_data):
     # connect to mongodb atlas and upload the data
     client = MongoClient(DB_CONNECT)
-    if counter == 0:
-        client['cryptotracker']['topcoins'].delete_many({})
-    else:
+    if counter != 0:
         collection = client['cryptotracker']['topcoins'].find({})
         for coin in coins_data:
             for dbcoin in collection:
                 if coin['id'] == dbcoin['id']:
                     coin['prediction'] = dbcoin['prediction']
                     break
+    client['cryptotracker']['topcoins'].delete_many({})
     client['cryptotracker']['topcoins'].insert_many(coins_data)
 
 
