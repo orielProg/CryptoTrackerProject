@@ -5,6 +5,7 @@ import GoogleIcon from "@mui/icons-material/Google";
 import { Divider } from "@mui/material";
 import { TextField, Card, CardHeader, CardContent, Link } from "@mui/material";
 import { useRef, useState } from "react";
+import { useSnackbar } from "notistack";
 import { useNavigate } from "react-router-dom";
 import LoadingButton from "@mui/lab/LoadingButton";
 import { GoogleLogin } from "react-google-login";
@@ -20,6 +21,7 @@ import axios from "axios";
 
 const Register = (props) => {
   const [loading, setLoading] = useState(false);
+  const { enqueueSnackbar} = useSnackbar();
   const navigate = useNavigate();
   const usernameRef = useRef();
   const emailRef = useRef();
@@ -37,6 +39,7 @@ const Register = (props) => {
   );
 
   const submitHandler = async (event) => {
+    
     event.preventDefault();
     if (emailFeedback.error || usernameFeedback.error || passwordFeedback.error)
       return;
@@ -60,7 +63,10 @@ const Register = (props) => {
         password,
         confirmPassword,
       })
-      .then((res) => navigate("/login"))
+      .then((res) => {
+        enqueueSnackbar("Account created successfully, please login", { variant: "success" });
+        navigate("/login");
+      })
       .catch((err) => alert(err.response.data));
     setLoading(false);
   };
@@ -159,6 +165,7 @@ const Register = (props) => {
             </Grid>
             <Grid container pb={2}>
               <Button
+              id = "signup"
                 variant="contained"
                 color="primary"
                 fullWidth

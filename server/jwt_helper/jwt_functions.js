@@ -27,7 +27,6 @@ const getUserID = async (accessToken,refreshToken,res) => {
         else{
             await jwt.verify(refreshToken,process.env.REFRESH_TOKEN_SECRET, async (err,user) => {
                 const userTokenDB = await User.findById({_id : user._id},{refreshToken : refreshToken});
-                console.log("REFRESHING" ,userTokenDB);
                 if(userTokenDB.refreshToken!==refreshToken){
                     return null;
                 }

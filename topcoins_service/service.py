@@ -13,7 +13,7 @@ DB_CONNECT = os.getenv("DB_CONNECT")
 
 cg = CoinGeckoAPI()
 
-coins = "bitcoin,ethereum,binancecoin,ripple,cardano,solana,polkadot"
+coins = "bitcoin,ethereum,leo-token,uniswap,chainlink,okb,matic-network"
 counter = 0
 
 

@@ -1,19 +1,14 @@
-FROM python:3.9.13
+FROM tensorflow/tensorflow:latest-gpu
 
 WORKDIR /usr/src/app/server
-COPY requirements.txt .
-RUN pip install --upgrade pip
-RUN pip3 install --upgrade pip setuptools && \
-    pip3 install -r requirements.txt
-RUN apt-get update
-RUN apt-get install xz-utils
-RUN apt-get -y install curl
-RUN curl https://nodejs.org/dist/v14.15.4/node-v14.15.4-linux-x64.tar.xz -O
-RUN tar -xf node-v14.15.4-linux-x64.tar.xz
-RUN ln -s /node-v14.15.4-linux-x64/bin/node /usr/local/bin/node
-RUN ln -s /node-v14.15.4-linux-x64/bin/npm /usr/local/bin/npm
-RUN ln -s /node-v14.15.4-linux-x64/bin/npx /usr/local/bin/npx
-RUN apt-get -y install npm
+RUN pip3 install scikit_learn
+# RUN export TF_CPP_MIN_LOG_LEVEL=2
+RUN apt-get update && \
+    apt-get install -y curl && \
+    curl -fsSL https://deb.nodesource.com/setup_16.x | bash - && \
+    apt-get install -y nodejs
+ENV DEBIAN_FRONTEND=noninteractive
+RUN npm install -g npm@latest
 COPY . .
 RUN npm install
 

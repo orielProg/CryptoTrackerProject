@@ -8,6 +8,13 @@ services:
     container_name: backend
     ports:
     - "5000:5000"
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]
   frontend:
     build: client/.
     image : 'docker.io/library/frontend'
@@ -21,6 +28,3 @@ services:
   top-coins-service:
     container_name: top-coins-service
     build: topcoins_service/.
-  price-diff-service:
-    container_name: price-diff-service
-    build: price_diff_service/.

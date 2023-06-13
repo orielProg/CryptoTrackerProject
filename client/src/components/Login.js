@@ -26,7 +26,6 @@ const Login = (props) => {
   const [passwordFeedback, setPasswordFeedback] = useState(
     initialValidationState
   );
-  const navigate = useNavigate();
   const context = useContext(LoggedInContext);
 
   const submitHandler = async (event) => {
@@ -109,6 +108,7 @@ const Login = (props) => {
                 inputRef={emailRef}
                 error={emailFeedback.error}
                 helperText={emailFeedback.helper}
+                helpertextid = "email-helper-text"
                 onChange={() =>
                   onRefChange(
                     emailRef,
@@ -128,6 +128,7 @@ const Login = (props) => {
                 inputRef={passwordRef}
                 error={passwordFeedback.error}
                 helperText={passwordFeedback.helper}
+                helpertexttestid = "password-helper-text"
                 onChange={() =>
                   onRefChange(
                     passwordRef,
@@ -141,6 +142,7 @@ const Login = (props) => {
             </Grid>
             <Grid container pb={2}>
               <Button
+              id="signin"
                 variant="contained"
                 color="primary"
                 fullWidth

@@ -27,11 +27,14 @@ const btcRegex = new RegExp(
 );
 
 router.get("/fetch-tokens", authToken, async (req, res, next) => {
+  const FIVE_MINUTES_MS = 5 * 60 * 1000;
   const _id = req.user_id;
-  console.log(_id);
   const user = await User.findOne({ _id: _id });
   if (!user) return res.status(400).send("Error");
   const filter = { _id: _id };
+  if(user.latestData && user.latestData.fetchTime && Date.now() - user.latestData.fetchTime < FIVE_MINUTES_MS) {
+    return res.status(200).send({});
+  }
   const wallets = user.wallets;
   let data;
   try {
@@ -40,7 +43,7 @@ router.get("/fetch-tokens", authToken, async (req, res, next) => {
     console.log(err);
     return res.status(400).send(err.message);
   }
-  console.log("Why?");
+  data.fetchTime = Date.now();
   const update = { latestData: data };
   await User.findOneAndUpdate(filter, update);
   res.status(200).send({});
@@ -59,21 +62,16 @@ router.get("/cards", authToken, async (req, res, next) => {
   const user = await User.findOne({ _id: _id });
   if (!user) return res.status(400).send("Error");
   const cards = user.latestData.cards;
-  console.log("Cards is", cards);
   res.status(200).send(cards);
 });
 
 router.post("/logout", authToken, async (req, res) => {
-  console.log("Trying to clear");
   deleteTokens(res);
   return res.status(200).send("Cleared");
 });
 
 router.post("/get-tokens", authToken, async (req, res) => {
-  console.log("Requesting tokens");
-  console.log(req.body);
   const _id = req.user_id;
-  console.log(_id);
   const page = req.body.page;
   const itemsPerPage = req.body.itemsPerPage;
   const { key, value } = getSortingPipeline(req.body.sortingModel);
@@ -102,16 +100,14 @@ router.post("/get-tokens", authToken, async (req, res) => {
       },
     },
   ];
-  console.log(pipeline);
   try {
     const cursor = db.collection("users").aggregate(pipeline);
     let assets = [];
     let size = 0;
     await cursor.forEach((doc) => assets.push(doc.latestData.assets));
-    if (req.body.rowCount === 0) {
       const sizeCursor = db.collection("users").aggregate(sizePipeline);
       await sizeCursor.forEach((doc) => (size = doc.assetsSize));
-    }
+    
     return res.status(200).send({ assets, size });
   } catch (err) {
     return res.status(404).send(err.message);
@@ -163,7 +159,6 @@ router.post("/check-contract-address", authToken, async (req, res) => {
           sparkline: false,
         })
       : await CoinGeckoClient.coins.fetchCoinContractInfo(contractAddress);
-  console.log(data.success);
   if (!data.success) return res.status(404).send(data.data.error);
   return res.status(200).send({
     diff: data.data.market_data.price_change_percentage_24h,
@@ -182,7 +177,6 @@ router.post("/change-password", authToken, async (req, res, next) => {
   const oldPassword = user.password;
   const oldPasswordValid = await bcrypt.compare(oldPasswordInput, oldPassword);
   if (!oldPasswordValid) {
-    console.log("HERE");
     return res.status(400).send("Old password is wrong");
   }
   const salt = await bcrypt.genSalt(10);
@@ -219,7 +213,6 @@ router.get("/get-wallets", authToken, async (req, res, next) => {
 
 router.get("/get-picture", authToken, async (req, res, next) => {
   const _id = req.user_id;
-  console.log(_id);
   const user = await User.findOne({ _id: _id });
   const photoUrl = user.photoUrl;
   return res.status(200).send(photoUrl);
@@ -244,7 +237,6 @@ router.get("/get-token-prediction", authToken, async (req, res) => {
           "ethereum",
           { vs_currency: "usd", days }
         );
-  console.log(data.success);
   if (!data.success) return res.status(404).send(data.data.error);
   const unixTime = Math.round(new Date().getTime() / 1000);
   try {
@@ -262,7 +254,7 @@ router.get("/get-token-prediction", authToken, async (req, res) => {
       }
     );
     const prediction = await getPrediction(`${unixTime}`);
-    console.log(prediction);
+    console.log(prediction)
     return res.status(200).send({ result: prediction });
   } catch (err) {
     console.log(err);
@@ -272,19 +264,7 @@ router.get("/get-token-prediction", authToken, async (req, res) => {
 router.get("/get-top-coins", authToken, async (req, res) => {
   const predictions = await TopCoin.find();
   let currentPrices = [];
-  url =
-    "https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&ids=bitcoin%2Cethereum%2Cbinancecoin%2Cripple%2Ccardano%2Csolana%2Cpolkadot&order=market_cap_desc&per_page=100&page=1&sparkline=false&price_change_percentage=1h%2C24h%2C7d&locale=en";
-  try {
-    const response = await axios.get(url, {
-      headers: { "Access-Control-Allow-Origin": "*" },
-    });
-    currentPrices = response.data;
-    currentPrices.forEach((coin, index) => {
-      coin.prediction = predictions ? predictions[index].prediction : "test_prediction";
-    });
-  } catch (err) {
-  }
-  res.status(200).send(currentPrices);
+  res.status(200).send(predictions);
 });
 
 router.get("/health", (req, res) => {

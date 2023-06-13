@@ -106,7 +106,6 @@ router.post("/google-login", async (req, res) => {
   const googleUser = await User.findOne({ googleID });
   //the user is registered
   if (googleUser) {
-    console.log("the user already registered via google");
     const _id = googleUser._id;
     await getTokens(req, res, _id);
     res.status(200).send("Logged");
@@ -164,20 +163,15 @@ router.get("/password-reset/:userID/:token", async (req, res) => {
   try {
     const token = req.params.token;
     const userID = req.params.userID;
-    console.log(token, userID);
     const user = await User.findOne({ _id: userID });
-    console.log(user);
     if (!user) {
-      console.log("does not exists");
       return res
         .status(404)
         .send({ success: false, message: "The link has expired" });
     }
     const email = user.email;
     const tokenObject = await Token.findOne({ email });
-    console.log(tokenObject);
     if (!tokenObject || tokenObject.token !== token) {
-      console.log("does not exists");
       return res
         .status(404)
         .send({ success: false, message: "The link has expired" });
@@ -236,20 +230,15 @@ router.get("/password-reset/:userID/:token", async (req, res) => {
   try {
     const token = req.params.token;
     const userID = req.params.userID;
-    console.log(token, userID);
     const user = await User.findOne({ _id: userID });
-    console.log(user);
     if (!user) {
-      console.log("does not exists");
       return res
         .status(404)
         .send({ success: false, message: "The link has expired" });
     }
     const email = user.email;
     const tokenObject = await Token.findOne({ email });
-    console.log(tokenObject);
     if (!tokenObject || tokenObject.token !== token) {
-      console.log("does not exists");
       return res
         .status(404)
         .send({ success: false, message: "The link has expired" });

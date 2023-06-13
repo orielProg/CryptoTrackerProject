@@ -21,6 +21,8 @@ import { cardsActions } from "../store/cards";
 import { loadCards } from "../store/asyncFunctions";
 import { getCards } from "./default_cards_state";
 import RemoveIcon from "@mui/icons-material/Remove";
+import React from 'react';
+
 
 const NaturalTrend = <RemoveIcon sx={{ color: common[500] }} />;
 const UpwardTrend = <ArrowUpwardIcon sx={{ color: green[500] }} />;
