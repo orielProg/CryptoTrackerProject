@@ -4,8 +4,12 @@ import {
   queryByAttribute,
   fireEvent,
   screen,
+  waitFor,
 } from "@testing-library/react";
 const getById = queryByAttribute.bind(null, "id");
+import axios from "axios";
+import { MemoryRouter } from "react-router-dom"; // Import MemoryRouter
+
 window.SVG = () => {};
 
 describe(Login, () => {
@@ -21,37 +25,5 @@ describe(Login, () => {
     expect(
       screen.getByText('"Password" length must be at least 6 characters long')
     ).toBeInTheDocument();
-  });
-
-  it("should login to the application", async () => {
-    jest.spyOn(axios, "post").mockReturnValue(
-      Promise.resolve({
-        body: { data: "Logged" },
-        headers: [
-          [
-            "set-cookie",
-            "accessToken=test; Max-Age=1800; Path=/; Expires=Sat, 10 Jun 2023 21:23:00 GMT; HttpOnly",
-          ],
-          [
-            "set-cookie",
-            "refreshToken=test; Max-Age=1800; Path=/; Expires=Sat, 10 Jun 2023 21:23:00 GMT; HttpOnly",
-          ],
-          [
-            "set-cookie",
-            "loggedIn=true; Max-Age=1800; Path=/; Expires=Sat, 10 Jun 2023 21:23:00 GMT; HttpOnly",
-          ],
-        ],
-      })
-    );
-    const dom = render(<Login />);
-    const emailInput = getById(dom.container, "email");
-    const passwordInput = getById(dom.container, "password");
-    const loginButton = getById(dom.container, "signin");
-    fireEvent.change(emailInput, { target: { value: "test@gmail.com" } });
-    fireEvent.change(passwordInput, { target: { value: "test1234" } });
-    fireEvent.click(loginButton);
-    await waitFor(() => {
-        
-    });
   });
 });

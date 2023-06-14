@@ -1,11 +1,12 @@
-const mongoose = require("../server/node_modules/mongoose");
+const mongoose = require("mongoose");
+mongoose.set('strictQuery', true);
 const request = require("supertest");
-const dotenv = require("../server/node_modules/dotenv");
-dotenv.config({ path: "./server/.env" });
-const { startServer } = require("../server/utils");
-const app = require("../server/utils")
+const dotenv = require("dotenv");
+dotenv.config({ path: "./.env" });
+const app = require("../utils")
 const { MongoMemoryServer } = require("mongodb-memory-server");
 let cookies = null;
+
 
 describe("Server tests", () => {
   beforeAll(async () => {
