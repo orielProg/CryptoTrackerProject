@@ -1,5 +1,6 @@
 const app = require('./utils.js');
 const mongoose = require("mongoose");
+mongoose.set('strictQuery', true);
 const dotenv = require("dotenv");
 
 
