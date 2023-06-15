@@ -31,12 +31,12 @@ To run CryptoTracker using Docker Compose, follow these steps:
 2. Navigate to the project directory:
    ```bash
    cd CryptoTracker
-Create a .env file and specify the required environment variables:
-
+3. Create a .env file and specify the required environment variables
+4. Build and run docker image
     ```bash
     docker-compose up --build -d
 
-Access CryptoTracker in your web browser at http://localhost:3000.
+5. Access CryptoTracker in your web browser at http://localhost:3000.
 
 ## 💻 Usage
 
