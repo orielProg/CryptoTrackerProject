@@ -31,10 +31,10 @@ def get_coins_predictions(coins_data, new=False):
         with open(coin_id + '.json', 'w') as outfile:
             json.dump(coin_data, outfile)
         # run the prediction model
-        prediction = predict.run(coin_id)
+        prediction = predict.run_topcoins_service(coin_id)
         print(prediction + coin_id)
         coin['prediction' if not new else "prediction_new"] = prediction
-    counter = 144
+    counter = 60
 
 
 def upload_data_to_db(coins_data):

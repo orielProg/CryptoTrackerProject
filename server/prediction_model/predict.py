@@ -120,3 +120,14 @@ def run_production():
         "epoch" : 20
     }
     print(main(job))
+
+def run_topcoins_service(coin):
+    job = {
+        "filename" : coin+".json",
+        "loss" : "mean_absolute_error",
+        "dropout" : 0.2,
+        "batch_size" : 32,
+        "epoch" : 20
+    }
+    return main(job)
+
