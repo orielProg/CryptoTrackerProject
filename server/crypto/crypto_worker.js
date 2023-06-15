@@ -59,7 +59,7 @@ const getNftTokens = async () => {
   const apiUrl = "https://api.opensea.io/api/v1/collections?asset_owner=";
   const url = apiUrl + wallet + "&format=json&limit=300&offset=0";
   try {
-    const response = await fetch(url,{headers : {"x-api-key" : process.env.SERVICE}});
+    const response = await fetch(url,{headers : {"x-api-key" : process.env.OPENSEA_API_KEY}});
     const data = await response.json();
     const type = "nft";
     if (data) {
