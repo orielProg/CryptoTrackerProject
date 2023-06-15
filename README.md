@@ -31,23 +31,15 @@ To run CryptoTracker using Docker Compose, follow these steps:
 2. Navigate to the project directory:
    ```bash
    cd CryptoTracker
-Create a .env file and specify the required environment variables:
+3. Create a .env file and specify the required environment variables
+4. Build and run docker image
+    ```bash
+    docker-compose up --build -d
 
-plaintext
-Copy code
-# Example .env file
-DB_HOST=my-database-host
-DB_PORT=5432
-DB_USER=my-database-user
-DB_PASSWORD=my-database-password
-Build and start the containers using Docker Compose:
+5. Access CryptoTracker in your web browser at http://localhost:3000.
 
-bash
-Copy code
-docker-compose up --build -d
-Access CryptoTracker in your web browser at http://localhost:3000.
+## 💻 Usage
 
-💻 Usage
 Sign up for a CryptoTracker account or log in if you already have one.
 
 Connect and sync your crypto wallets with CryptoTracker. Supported cryptocurrencies include Bitcoin, Ethereum, and various others.
