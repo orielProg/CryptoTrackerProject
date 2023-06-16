@@ -1,6 +1,8 @@
 const { Worker } = require("worker_threads");
 const axios = require("axios");
 
+// creates multiple worker threads, each responsible for
+// fetching and processing assets for a specific wallet.
 const activateWorkers = (wallets) => {
   if (wallets.length === 0) return [];
   let counter = 0;
@@ -22,6 +24,8 @@ const activateWorkers = (wallets) => {
   });
 };
 
+// alculates the percentage distribution of different asset types
+// (BTC, ETH/ERC20, NFT) based on their total values.
 const calculateChartData = (eth, erc20, nft, btc) => {
   let total = eth + erc20 + nft + btc;
   return [
@@ -44,6 +48,8 @@ const calculateChartData = (eth, erc20, nft, btc) => {
   ];
 };
 
+// standardize and format the common properties of a coin,
+// so that they can be easily used in the context of displaying information on a card.
 const processCommonCards = (coin) => {
   return {
     value: "$" + coin.current_price.toLocaleString(),
@@ -53,6 +59,7 @@ const processCommonCards = (coin) => {
   };
 };
 
+// ensures that the price property of each asset in the mainAssets.assets array matches the current value.
 const matchPricesFromCards = (mainAssets) => {
   mainAssets.assets.forEach((asset) => {
     if (asset.type === "btc") asset.price = mainAssets.cards[1].valueDecimal;
@@ -61,6 +68,7 @@ const matchPricesFromCards = (mainAssets) => {
   return mainAssets
 }
 
+// fetches the latest price data for BTC and ETH
 const getBtcAndEthData = async (mainAssets) => {
   url =
     "https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&ids=bitcoin%2Cethereum&order=market_cap_desc&per_page=100&page=1&sparkline=false&price_change_percentage=1h%2C24h%2C7d&locale=en";
@@ -77,6 +85,8 @@ const getBtcAndEthData = async (mainAssets) => {
   }
 };
 
+// aggregated assets from all the wallets,
+// with the amounts of assets accumulated for each unique key.
 const mergeAssets = (mainAssets) => {
   let result = {};
   mainAssets.forEach((assets) => {
@@ -91,11 +101,12 @@ const mergeAssets = (mainAssets) => {
   return result;
 };
 
-const getAssets = async (wallets, id) => {
+const getAssets = async (wallets) => {
   let mainAssets = {};
   let flag = false;
   if (!wallets || wallets.length === 0) flag = true;
   if (!flag)
+    // activates worker threads to process the wallets in parallel
     await activateWorkers(wallets)
       .then((result) => {
         mainAssets = result;
@@ -104,11 +115,12 @@ const getAssets = async (wallets, id) => {
         throw err;
       });
   if (!flag) mainAssets = mergeAssets(mainAssets);
-  mainAssets = await calculateTotal(mainAssets, id);
+  mainAssets = await calculateTotal(mainAssets);
   mainAssets = await getBtcAndEthData(mainAssets);
   return mainAssets;
 };
 
+// determine the overall trend based on the contributions of individual assets.
 const calculateTotalTrend = (assets, total) => {
   let totalTrend = 0;
   assets.forEach((asset) => {
