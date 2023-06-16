@@ -7,12 +7,9 @@ from tensorflow.keras import layers
 from copy import deepcopy
 import math
 import os
+import constant
 
-PREDICTION_HOURS = 10
-WINDOW_SIZE = 60
-NN_UNITS = 50
-INPUT_SIZE = 24*30
-RANDOM_THRESHOLD = 600
+
 
 def reshape_data(job):
     with open(job["filename"]) as f:
@@ -24,37 +21,37 @@ def reshape_data(job):
 
 def get_closest_elements(arr):
     new_arr = []
-    for i in range(len(arr)-WINDOW_SIZE):
-        new_arr.append([arr[i:i+WINDOW_SIZE, 0]])
+    for i in range(len(arr)-constant.WINDOW_SIZE):
+        new_arr.append([arr[i:i+constant.WINDOW_SIZE, 0]])
     return new_arr
     
 def create_test(scaled_prices):
-    r = np.random.randint(0, RANDOM_THRESHOLD)
+    r = np.random.randint(0, constant.RANDOM_THRESHOLD)
     test_arr = []
     y_test = []
     y = []
-    for i in range(r, r+INPUT_SIZE):
-        test_arr.append(scaled_prices[i:i+WINDOW_SIZE-1, 0])
-        y.append(scaled_prices[i+WINDOW_SIZE-1])
-    y_test.append([scaled_prices[r+INPUT_SIZE-1+WINDOW_SIZE]])
+    for i in range(r, r+constant.INPUT_SIZE):
+        test_arr.append(scaled_prices[i:i+constant.WINDOW_SIZE-1, 0])
+        y.append(scaled_prices[i+constant.WINDOW_SIZE-1])
+    y_test.append([scaled_prices[r+constant.INPUT_SIZE-1+constant.WINDOW_SIZE]])
     return np.array(test_arr), np.array(y_test), np.array(y)
 
 def get_train_data(scaled_prices):
-    middle_matrix = np.array([price[0][0:WINDOW_SIZE-1] for price in scaled_prices])
+    middle_matrix = np.array([price[0][0:constant.WINDOW_SIZE-1] for price in scaled_prices])
     X = middle_matrix.reshape((len(scaled_prices), middle_matrix.shape[1], 1))
 
-    Y = np.array([price[0][WINDOW_SIZE-1] for price in scaled_prices])
+    Y = np.array([price[0][constant.WINDOW_SIZE-1] for price in scaled_prices])
 
     return X.astype(np.float32), Y.astype(np.float32)
 
 def get_model(job,X):
     model = Sequential()
-    model.add(layers.LSTM(units=NN_UNITS, return_sequences=True,
+    model.add(layers.LSTM(units=constant.NN_UNITS, return_sequences=True,
               input_shape=(X.shape[1], 1)))
     model.add(layers.Dropout(job["dropout"]))
-    model.add(layers.LSTM(units=NN_UNITS, return_sequences=True))
+    model.add(layers.LSTM(units=constant.NN_UNITS, return_sequences=True))
     model.add(layers.Dropout(job["dropout"]))
-    model.add(layers.LSTM(units=NN_UNITS))
+    model.add(layers.LSTM(units=constant.NN_UNITS))
     model.add(layers.Dropout(job["dropout"]))
     model.add(layers.Dense(units=1))
 
@@ -64,13 +61,13 @@ def get_model(job,X):
 
 def get_recursive_predictions(model,X):
     recursive_predictions = []
-    for i in range(PREDICTION_HOURS):
+    for i in range(constant.PREDICTION_HOURS):
         if i == 0:
             last_window = deepcopy(X[-1])
         else:
             last_window = last_window[1:]
             last_window = np.append(last_window, next_prediction)
-            last_window = last_window.reshape(WINDOW_SIZE-1, 1)
+            last_window = last_window.reshape(constant.WINDOW_SIZE-1, 1)
         next_prediction = model.predict(
             np.array([last_window]),verbose=0)
         next_prediction = next_prediction.flatten()
