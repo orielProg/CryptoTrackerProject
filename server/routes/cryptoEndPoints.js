@@ -38,7 +38,7 @@ router.get("/fetch-tokens", authToken, async (req, res, next) => {
   const wallets = user.wallets;
   let data;
   try {
-    data = await getAssets(wallets, _id);
+    data = await getAssets(wallets);
   } catch (err) {
     console.log(err);
     return res.status(400).send(err.message);

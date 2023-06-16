@@ -7,6 +7,9 @@ const { validate } = require("bitcoin-address-validation");
 let assets = {};
 let ethDollarPrice;
 const wallet = workerData.wallet;
+
+// populates the assets object with Ethereum and ERC20
+// token information associated with the provided wallet address.
 const getErc20Tokens = async (wallet) => {
   const apiUrl = "https://api.ethplorer.io/getAddressInfo/";
   const url = apiUrl + wallet + "?apiKey=EK-mqqwV-SxcQuum-jjU5j";
