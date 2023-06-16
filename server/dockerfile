@@ -1,0 +1,18 @@
+FROM tensorflow/tensorflow:latest-gpu
+
+WORKDIR /usr/src/app/server
+RUN pip3 install scikit_learn
+# RUN export TF_CPP_MIN_LOG_LEVEL=2
+RUN apt-get update && \
+    apt-get install -y curl && \
+    curl -fsSL https://deb.nodesource.com/setup_16.x | bash - && \
+    apt-get install -y nodejs
+ENV DEBIAN_FRONTEND=noninteractive
+RUN npm install -g npm@latest
+COPY . .
+RUN npm install
+
+WORKDIR /usr/src/app
+
+EXPOSE 5000
+CMD [ "node", "./server/index.js" ]

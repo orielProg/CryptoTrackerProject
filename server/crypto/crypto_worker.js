@@ -56,7 +56,6 @@ const getErc20Tokens = async (wallet) => {
 };
 
 const getNftTokens = async () => {
-  console.log("IM FETCHING NFTS");
   const apiUrl = "https://api.opensea.io/api/v1/collections?asset_owner=";
   const url = apiUrl + wallet + "&format=json&limit=300&offset=0";
   try {
@@ -128,7 +127,6 @@ if (!validate(wallet))
       });
     })
     .catch((err) => {
-      console.log("Worker catched");
       throw err;
     });
 else {

@@ -14,11 +14,9 @@ const tokensSlice = createSlice({
   },
   reducers: {
     updateTokens: (state, action) => {
-      console.log("Action", action);
       state.tokens = action.payload;
     },
     setLoading: (state, action) => {
-      console.log("SETTING LOADING TO ", action.payload)
       state.loading = action.payload;
     },
     setError: (state, action) => {

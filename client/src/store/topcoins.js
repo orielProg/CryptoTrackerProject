@@ -10,7 +10,6 @@ const topCoinsSlice = createSlice({
   },
   reducers: {
     setLoading: (state, action) => {
-      console.log("SETTING LOADING TO ", action.payload);
       state.loading = action.payload;
     },
     setError: (state, action) => {

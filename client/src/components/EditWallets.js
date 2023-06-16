@@ -12,6 +12,7 @@ import {
 import { Fragment, useState } from "react";
 import UpperbarSettings from "./UpperbarSettings";
 import AddIcon from "@mui/icons-material/Add";
+import { useDispatch, useSelector } from "react-redux";
 import { useRef } from "react";
 import CloseIcon from "@mui/icons-material/Close";
 import WalletsList from "./WalletsList";
@@ -20,6 +21,10 @@ import { useEffect, useContext } from "react";
 import { LoggedInContext } from "../App";
 import { useSnackbar } from "notistack";
 import { TailSpin } from "react-loader-spinner";
+import { tokensActions } from "../store/tokens";
+import {
+  uploadAndLoadTokens, getTokens, checkIfCanBeCharted
+} from "../store/asyncFunctions";
 
 const style = {
   position: "absolute",
@@ -34,16 +39,18 @@ const btcRegex = new RegExp(
 
 const EditWallets = (props) => {
   const [open, setOpen] = useState(false);
+  const dispatch = useDispatch();
   const [loading, setLoading] = useState(true);
   const { enqueueSnackbar } = useSnackbar();
   const walletRef = useRef("");
   const [walletsData, setWalletsData] = useState([]);
   const [selected, setSelected] = useState([]);
   const context = useContext(LoggedInContext);
-  console.log(selected);
+  const rowCount = useSelector((state) => state.tokens.rowCount);
+  const sortingModel = useSelector((state) => state.tokens.sortingModel);
+  const page = useSelector((state) => state.tokens.page);
 
   const handleToggle = (event) => {
-    console.log("HI");
     const value = event.currentTarget.id;
     const currentIndex = selected.indexOf(value);
     const newSelected = [...selected];
@@ -57,10 +64,11 @@ const EditWallets = (props) => {
     setSelected(newSelected);
   };
 
-  useEffect(async () => {
-    if (walletsData.length !== 0) return;
+  useEffect(() => {
+    async function updateWalletsFunc() {
+      if (walletsData.length !== 0) return;
     await axios
-      .get("/app/get-wallets")
+      .get("/api/app/get-wallets")
       .then((data) => {
         setWalletsData(data.data);
       })
@@ -70,16 +78,18 @@ const EditWallets = (props) => {
         })
       );
     setLoading(false);
+    }
+    updateWalletsFunc();
   }, []);
 
   const updateWallets = async () => {
     await axios
-      .post("/app/change-wallets", { wallets: walletsData })
+      .post("/api/app/change-wallets", { wallets: walletsData })
       .then(() => {
-        console.log("Updated");
         enqueueSnackbar("Wallets updated successfully!", {
           variant: "success",
         });
+        dispatch(uploadAndLoadTokens(page, 7, rowCount, sortingModel))
       })
       .catch((error) => {
         if (error.response && error.response.data)
@@ -98,7 +108,6 @@ const EditWallets = (props) => {
 
   const deleteWalletsHandler = () => {
     setSelected([]);
-    console.log(selected);
     setWalletsData(walletsData.filter((wallet) => !selected.includes(wallet)));
   };
 
@@ -111,7 +120,6 @@ const EditWallets = (props) => {
       });
       return;
     }
-    console.log(btcRegex.test(newWallet));
     if (
       /^(0x){1}[0-9a-fA-F]{40}$/i.test(newWallet) ||
       btcRegex.test(newWallet)
@@ -126,8 +134,8 @@ const EditWallets = (props) => {
 
   return (
     <Fragment>
-      <Grid container xs={12}>
-        <Grid container xs={12} justifyContent="center">
+      <Grid container >
+        <Grid container justifyContent="center">
           <Grid item xs={5}>
             <Card>
               <CardHeader
@@ -151,7 +159,7 @@ const EditWallets = (props) => {
                   />
                 )}
                 {loading && (
-                  <Grid container xs={12} justifyContent="center">
+                  <Grid container justifyContent="center">
                     <Grid item>
                       <TailSpin
                         height="100"
@@ -164,7 +172,7 @@ const EditWallets = (props) => {
                 )}
               </CardContent>
               <Divider />
-              <Grid container xs={12} justifyContent="right">
+              <Grid container  justifyContent="right">
                 <Grid item padding={1}>
                   <Button variant="contained" onClick={deleteWalletsHandler}>
                     Delete selected wallets
@@ -186,8 +194,8 @@ const EditWallets = (props) => {
         aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-description"
       >
-        <Grid container xs={4} justifyContent="center" style={style}>
-          <Grid item xs={12}>
+        <Grid container justifyContent="center" style={style}>
+          <Grid item xs={5}>
             <Card>
               <CardHeader
                 title="Add a new wallet"
@@ -210,7 +218,7 @@ const EditWallets = (props) => {
                 />
               </CardContent>
               <Divider />
-              <Grid container xs={12} justifyContent="right">
+              <Grid container justifyContent="right">
                 <Grid item padding={1}>
                   <Button
                     variant="contained"

@@ -31,8 +31,9 @@ const PasswordRecover = (props) => {
   );
   const navigate = useNavigate();
 
-    useEffect(async () => {
-      const url = "/password-reset/" + id + "/" + token;
+    useEffect(() => {
+      async function fetchResetPassword() {
+        const url = "/api/password-reset/" + id + "/" + token;
       try {
         await axios.get(url);
         setAllowed(true);
@@ -41,6 +42,8 @@ const PasswordRecover = (props) => {
           enqueueSnackbar(error.response.data.message, { variant: "error" });
         else enqueueSnackbar(error.message, { variant: "error" });
       }
+      }
+      fetchResetPassword();
     }, [setAllowed]);
 
   const submitHandler = async () => {
@@ -51,7 +54,7 @@ const PasswordRecover = (props) => {
       return;
     }
     try {
-      await axios.post("/change-password", {
+      await axios.post("/api/change-password", {
         password,
         confirmPassword,
         token,
@@ -90,7 +93,7 @@ const PasswordRecover = (props) => {
 
             <CardContent>
               <Divider />
-              <Grid container xs={12} pt={2} pb={2}>
+              <Grid container pt={2} pb={2}>
                 <TextField
                   margin="normal"
                   fullWidth

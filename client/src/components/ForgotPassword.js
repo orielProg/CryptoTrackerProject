@@ -27,7 +27,7 @@ const ForgotPassword = (props) => {
       setLoading(true);
     const email = emailRef.current.value;
     try {
-      await axios.post("/password-reset", { email });
+      await axios.post("/api/password-reset", { email });
       enqueueSnackbar("Recovery email sent", { variant: "success" });
     } catch (error) {
       if (error.response && error.response.data)
@@ -67,7 +67,7 @@ const ForgotPassword = (props) => {
           ></CardHeader>
           <CardContent>
             <Divider />
-            <Grid container xs={12} pt={2} pb={2}>
+            <Grid container pt={2} pb={2}>
               <TextField
                 margin="normal"
                 fullWidth

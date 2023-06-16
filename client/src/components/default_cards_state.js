@@ -1,6 +1,8 @@
 import ArrowDownwardIcon from "@mui/icons-material/ArrowDownward";
 import ArrowUpwardIcon from "@mui/icons-material/ArrowUpward";
 import {green,red} from "@mui/material/colors"
+import React from 'react';
+
 
 export const data = [
     {
@@ -33,17 +35,17 @@ export const data = [
       alt: "worth",
       image:
         "https://imageio.forbes.com/blogs-images/ofx/files/2018/09/OFX3-iStock-492595743-1200x800.jpg?fit=bounds&format=jpg&width=960",
-      header: "Total worth",
+      header: "Total Worth",
     },
     {
       alt: "btc",
       image: "https://block-builders.net/wp-content/uploads/2020/10/Bitcoin-logo-678x381.png",
-      header: "Total BTC",
+      header: "BTC Price",
     },
     {
       alt: "eth",
       image: "https://logowik.com/content/uploads/images/ethereum3649.jpg",
-      header: "Total ETH",
+      header: "ETH Price",
     },
     {
       alt: "nft",

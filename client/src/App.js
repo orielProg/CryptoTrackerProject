@@ -18,6 +18,7 @@ import Dashboard from "./components/Dashboard";
 import Settings from "./components/Settings";
 import TopTokens from "./components/TopTokens";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 
 export const LoggedInContext = createContext();
@@ -25,12 +26,23 @@ export const LoggedInContext = createContext();
 
 
 function App() {
+  console.log(process.env.API_URL_DOCKER)
   const [picture, setPicture] = useState("");
   const [loggedIn, setLoggedIn] = useState(Cookies.get("loggedIn"));
 
+  const logoutHandler = async () => {
+    await axios
+      .post("/api/app/logout")
+      .then(() => {
+        setLoggedIn(false);
+        window.open("/login", "_self")
+      })
+      .catch((err) => console.log(err));
+  };
+
   const getPicture = async () => {
     await axios
-      .get("/app/get-picture")
+      .get("/api/app/get-picture")
       .then((res) => {
         setPicture(res.data);
       })
@@ -39,9 +51,12 @@ function App() {
       });
   };
 
-  useEffect(async () => {
+  useEffect(() => {
+    async function loggedInFunc(){
     if (loggedIn) await getPicture();
-  }, []);
+  }
+  loggedInFunc();
+}, []);
 
   return (
     <ThemeProvider theme={theme}>
@@ -70,8 +85,8 @@ function App() {
             {loggedIn && (
               <Routes>
               <Route path="/settings" element={<Settings />} />
-                <Route path="/" element={<Dashboard />} />
-                <Route path="/recommended" element={<TopTokens />} />
+                <Route path="/" element={<Dashboard logoutHandler = {logoutHandler}/>} />
+                <Route path="/recommended" element={<TopTokens logoutHandler = {logoutHandler}/>} />
                 <Route path="*" element={<Navigate to="/" replace />} />
               </Routes>
             )}

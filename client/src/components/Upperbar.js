@@ -18,7 +18,6 @@ const Upperbar = (props) => {
   const context = useContext(LoggedInContext);
   const theme = useTheme();
   
-  console.log("Context check", context);
 
   const openSettings = () => {
     navigate("/settings")
@@ -28,15 +27,7 @@ const Upperbar = (props) => {
   }
 
 
-  const logoutHandler = async () => {
-    await axios
-      .post("/app/logout")
-      .then(() => {
-        context.setLoggedIn(false);
-        navigate("/login");
-      })
-      .catch((err) => console.log(err));
-  };
+
   return (
     <Toolbar
       style={{
@@ -48,7 +39,7 @@ const Upperbar = (props) => {
       <Grid container>
         {" "}
         <Tooltip title="Logout">
-          <IconButton onClick={logoutHandler}>
+          <IconButton onClick={props.logoutHandler}>
             <LogoutIcon />
           </IconButton>
         </Tooltip>

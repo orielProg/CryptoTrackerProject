@@ -1,0 +1,9 @@
+Code: https://github.com/orielProg/CryptoTrackerProject
+Project code: 44
+Project's name: CryptoTracker
+Creators:
+    אוריאל זהבי - 315242115 - קבוצה 05
+    חן ברסנו - 319004339 - קבוצה 31 
+Jira: https://cryptotracker10.atlassian.net/jira/software/projects/CRYP/boards/1/roadmap
+Video: https://youtu.be/7A2nC09LS9U
+Slides: https://www.figma.com/proto/CZHQBe4DnU7nHgTwz5jqX1/CryptoTracker-Architecture?type=design&node-id=1-2&scaling=contain&page-id=13%3A12

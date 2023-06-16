@@ -30,9 +30,9 @@ const Tokens = (props) => {
   const { enqueueSnackbar } = useSnackbar();
   const page = useSelector((state) => state.tokens.page);
   const rowCount = useSelector((state) => state.tokens.rowCount);
+  console.log(rowCount)
   const tokenInfo = useSelector((state) => state.tokens.tokenInfo);
   const sortingModel = useSelector((state) => state.tokens.sortingModel);
-  console.log(sortingModel)
 
   const successFunction = () => {
     enqueueSnackbar("Tokens updated successfully", {
@@ -66,25 +66,30 @@ const Tokens = (props) => {
     else successFunction()
   };
 
-  useEffect(async () => {
+  useEffect(() => {
+    async function uploadAndLoadTokensFunc(){
     if (tokens.length === 0) {
       dispatch(uploadAndLoadTokens(page, 7, rowCount, sortingModel))
       if(error) errorFunction()
     }
-  }, []);
+  }
+  uploadAndLoadTokensFunc();
+}, []);
 
-  useEffect(async () => {
+  useEffect(() => {
+    async function firstRunCheck(){
     if(isFirstRun.current){
       isFirstRun.current = false;
       return;
     }
     dispatch(getTokens(page, 7, rowCount, sortingModel));
     if(error) errorFunction()
-  }, [page,sortingModel])
+  }
+  firstRunCheck();
+}, [page,sortingModel])
 
 
   const handleSortModelChange = (newModel) => {
-    console.log("changing model to ")
     dispatch(tokensActions.setSortingModel(newModel));
   };
 
@@ -97,8 +102,8 @@ const Tokens = (props) => {
           titleTypographyProps={{ variant: "h4" }}
           action={
             <Tooltip title="Refresh">
-              <IconButton aria-label="refresh">
-                <RefreshIcon onClick={refreshHandler} />
+              <IconButton aria-label="refresh"  onClick={refreshHandler} >
+                <RefreshIcon/>
               </IconButton>
             </Tooltip>
           }

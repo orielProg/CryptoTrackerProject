@@ -26,7 +26,6 @@ const Login = (props) => {
   const [passwordFeedback, setPasswordFeedback] = useState(
     initialValidationState
   );
-  const navigate = useNavigate();
   const context = useContext(LoggedInContext);
 
   const submitHandler = async (event) => {
@@ -36,7 +35,7 @@ const Login = (props) => {
     const email = emailRef.current.value;
     const password = passwordRef.current.value;
     await axios
-      .post("/login", {
+      .post("/api/login", {
         email,
         password,
       })
@@ -46,9 +45,8 @@ const Login = (props) => {
   };
 
   const googleLogin = async (res) => {
-    console.log(res);
     await axios
-      .post("/google-login", {
+      .post("/api/google-login", {
         googleID: res.googleId,
         email: res.profileObj.email,
         picture: res.profileObj.imageUrl,
@@ -60,7 +58,6 @@ const Login = (props) => {
   return (
     <Grid
       container
-      xs={12}
       justifyContent={"center"}
       sx={{
         position: "absolute",
@@ -84,7 +81,7 @@ const Login = (props) => {
               onSuccess={(res) => googleLogin(res)}
               onFailure={(res) => console.log(res)}
               render={(renderProps) => (
-                <Grid container xs={12} justifyContent={"center"} pb={3}>
+                <Grid container justifyContent={"center"} pb={3}>
                   <Grid item xs={8}>
                     <Button
                       variant="contained"
@@ -102,7 +99,7 @@ const Login = (props) => {
             />
 
             <Divider>or login with email address</Divider>
-            <Grid container xs={12} pt={2} pb={2}>
+            <Grid container pt={2} pb={2}>
               <TextField
                 margin="normal"
                 fullWidth
@@ -111,6 +108,7 @@ const Login = (props) => {
                 inputRef={emailRef}
                 error={emailFeedback.error}
                 helperText={emailFeedback.helper}
+                helpertextid = "email-helper-text"
                 onChange={() =>
                   onRefChange(
                     emailRef,
@@ -130,6 +128,7 @@ const Login = (props) => {
                 inputRef={passwordRef}
                 error={passwordFeedback.error}
                 helperText={passwordFeedback.helper}
+                helpertexttestid = "password-helper-text"
                 onChange={() =>
                   onRefChange(
                     passwordRef,
@@ -143,6 +142,7 @@ const Login = (props) => {
             </Grid>
             <Grid container pb={2}>
               <Button
+              id="signin"
                 variant="contained"
                 color="primary"
                 fullWidth

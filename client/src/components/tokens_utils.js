@@ -132,7 +132,7 @@ const addDollar = (params, fieldName) => {
       <StyledGridOverlay>
         <svg
           width="120"
-          height="100"
+          height="50vh"
           viewBox="0 0 184 152"
           aria-hidden
           focusable="false"

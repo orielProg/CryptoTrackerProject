@@ -10,7 +10,7 @@ import {
 
 import ArrowDownwardIcon from "@mui/icons-material/ArrowDownward";
 import ArrowUpwardIcon from "@mui/icons-material/ArrowUpward";
-import { green, red,common } from "@mui/material/colors";
+import { green, red, common } from "@mui/material/colors";
 import { useSnackbar } from "notistack";
 
 import { useEffect, useContext } from "react";
@@ -20,7 +20,9 @@ import { useDispatch, useSelector } from "react-redux";
 import { cardsActions } from "../store/cards";
 import { loadCards } from "../store/asyncFunctions";
 import { getCards } from "./default_cards_state";
-import RemoveIcon from '@mui/icons-material/Remove';
+import RemoveIcon from "@mui/icons-material/Remove";
+import React from 'react';
+
 
 const NaturalTrend = <RemoveIcon sx={{ color: common[500] }} />;
 const UpwardTrend = <ArrowUpwardIcon sx={{ color: green[500] }} />;
@@ -28,27 +30,34 @@ const DownwardTrend = <ArrowDownwardIcon sx={{ color: red[500] }} />;
 
 const ContentCard = (props) => {
   const dispatch = useDispatch();
-  const fetchCounter = useSelector((state) => state.tokens.fetchCounter)
+  const fetchCounter = useSelector((state) => state.tokens.fetchCounter);
+  const tokens = useSelector((state) => state.tokens.tokens);
   const cardsDynamicElements = useSelector((state) => state.cards.cards);
-  const error = useSelector((state) => state.cards.error)
-  const cards = cardsDynamicElements.length ===0 ? getCards() : getCards(cardsDynamicElements);
-  
+  const error = useSelector((state) => state.cards.error);
+  const cards =
+    cardsDynamicElements.length === 0
+      ? getCards()
+      : getCards(cardsDynamicElements);
+
   const context = useContext(LoggedInContext);
   const { enqueueSnackbar } = useSnackbar();
 
-  useEffect(async () => {
-    console.log("Fetching cards")
-    dispatch(loadCards());
-      if(error) enqueueSnackbar(error, {
-        variant: "error",
-      });
-  }, [fetchCounter]);
+  useEffect(() => {
+    async function loadCardsFunc() {
+      dispatch(loadCards());
+      if (error)
+        enqueueSnackbar(error, {
+          variant: "error",
+        });
+    }
+    loadCardsFunc();
+  }, [fetchCounter,tokens]);
 
   return (
-    <Grid container xs={12} spacing={2}>
+    <Grid container spacing={2}>
       {cards.map((element) => {
         return (
-          <Grid item xs={3}>
+          <Grid key={element.alt} item xs={3}>
             <Card>
               <CardMedia
                 component="img"
@@ -79,11 +88,18 @@ const ContentCard = (props) => {
                   spacing={1}
                 >
                   <Grid item>
-                    {(element.trendValue==="0%" || element.trendValue===0) ? NaturalTrend : element.trend === "up" ? UpwardTrend : DownwardTrend}
+                    {element.trendValue === "0%" || element.trendValue === 0
+                      ? NaturalTrend
+                      : element.trend === "up"
+                      ? UpwardTrend
+                      : DownwardTrend}
                   </Grid>
                   <Grid item>
                     <Typography variant="body2">
-                      {(element.trendValue==="0%" || element.trendValue===0) ? "No changes" : element.trendValue} since last check
+                      {element.trendValue === "0%" || element.trendValue === 0
+                        ? ""
+                        : element.trendValue}{" "}
+        {element.alt === "nft" ? "" : "in the last day"}
                     </Typography>
                   </Grid>
                 </Grid>

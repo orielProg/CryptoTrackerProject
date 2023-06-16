@@ -35,7 +35,6 @@ const ChangePassword = (props) => {
     const newPassword = newPasswordRef.current.value;
     const newPasswordConfirm = newPasswordConfirmRef.current.value;
     let errorFlag = false;
-    console.log(oldPasswordRef.current);
     if (newPasswordConfirm !== newPassword) {
       setNewPasswordConfirmValidation({
         error: true,
@@ -52,7 +51,7 @@ const ChangePassword = (props) => {
     } else setNewPasswordValidation({ ...initialValidationState });
     if (errorFlag) return;
     await axios
-      .post("/app/change-password", { oldPassword, newPassword })
+      .post("/api/app/change-password", { oldPassword, newPassword })
       .then(() => {
         setNewPasswordConfirmValidation({ ...initialValidationState });
         setNewPasswordValidation({ ...initialValidationState });
@@ -81,8 +80,8 @@ const ChangePassword = (props) => {
       });
   };
   return (
-    <Grid container xs={12} pt={3} pb = {3}>
-      <Grid container xs={12} justifyContent="center">
+    <Grid container pt={3} pb = {3}>
+      <Grid container justifyContent="center">
         <Grid item xs={5}>
           <Card>
             <CardHeader titleTypographyProps={{variant : "h5"}} subheader="Update your password" title="Password" />
@@ -120,7 +119,7 @@ const ChangePassword = (props) => {
               />
             </CardContent>
             <Divider />
-            <Grid container xs={12} justifyContent="right">
+            <Grid container justifyContent="right">
               <Grid item padding={1}>
                 <Button variant="contained" onClick={submitHandler}>
                   Update

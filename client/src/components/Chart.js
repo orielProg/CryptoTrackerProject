@@ -27,19 +27,22 @@ const colorsArray = ["#3F51B5", "#E53935", "#FB8C00"];
 const Chart = (props) => {
   const dispatch = useDispatch();
   const chart = useSelector((state) => state.chart.chart)
+  const tokens = useSelector((state) => state.tokens.tokens);
   const fetchCounter = useSelector((state) => state.tokens.fetchCounter);
   const error = useSelector((state) => state.chart.error)
   const theme = useTheme();
   const { enqueueSnackbar } = useSnackbar();
 
 
-  useEffect(async () => {
+  useEffect(() => {
+    async function loadChartFunc(){
       dispatch(loadChart());
       if(error) enqueueSnackbar(error, {
         variant: "error",
       });
-      console.log("useEffect",chart);
-  }, [fetchCounter]);
+  }
+  loadChartFunc();
+}, [fetchCounter,tokens]);
 
   const data = {
     datasets: [
@@ -82,12 +85,12 @@ const Chart = (props) => {
     <Card sx={{ height: "100%" }}>
       <CardHeader title="Chart" titleTypographyProps={{ variant: "h4" }} />
       <Divider />
-      <Grid container xs={12} justifyContent="center">
+      <Grid container justifyContent="center">
         <Grid item xs={8}>
           <Doughnut data={data} />
         </Grid>
       </Grid>
-      <Grid container xs={12} justifyContent="center">
+      <Grid container justifyContent="center">
         {bottom.map(({ color, title, value, icon }) => (
           <Box
             key={title}
