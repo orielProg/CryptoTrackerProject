@@ -1,7 +1,7 @@
 const mongoose = require('mongoose')
 
 const topCoinsSchema = new mongoose.Schema({
-    coin: {
+    id: {
         type: String,
         required: true,
     },
@@ -9,28 +9,28 @@ const topCoinsSchema = new mongoose.Schema({
         type: String,
         required: true,
     },
-    price: {
-        type: String,
+    current_price: {
+        type: Number,
         required: true,
     },
-    hour_diff: {
-        type: String,
+    price_change_percentage_1h_in_currency: {
+        type: Number,
         required: true,
     },
-    day_diff: {
-        type: String,
+    price_change_percentage_24h_in_currency: {
+        type: Number,
         required: true,
     },
-    seven_diff: {
-        type: String,
+    price_change_percentage_7d_in_currency: {
+        type: Number,
         required: true,
     },
-    day_volume: {
-        type: String,
+    total_volume: {
+        type: Number,
         required: true,
     },
-    mkt_cap: {
-        type: String,
+    market_cap: {
+        type: Number,
         required: true,
     },
     prediction: {

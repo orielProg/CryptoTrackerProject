@@ -1,10 +1,12 @@
-const mongoose = require("mongoose");
+const mongoose = require("../server/node_modules/mongoose");
 mongoose.set('strictQuery', true);
 const request = require("supertest");
-const dotenv = require("dotenv");
-dotenv.config({ path: "./.env" });
-const app = require("../utils")
+const dotenv = require("../server/node_modules/dotenv");
+dotenv.config({ path: "./server/.env" });
+const app = require("../server/utils")
 const { MongoMemoryServer } = require("mongodb-memory-server");
+const TopCoins = require("../server/model/TopCoins");
+const {topcoinsResponse} = require("./topcoinsResponse");
 let cookies = null;
 
 
@@ -12,6 +14,7 @@ describe("Server tests", () => {
   beforeAll(async () => {
     const mongoServer = await MongoMemoryServer.create();
     await mongoose.connect(mongoServer.getUri());
+    TopCoins.insertMany(topcoinsResponse);
   });
 
   afterAll(async () => {
@@ -106,6 +109,22 @@ describe("Server tests", () => {
         it("Should not get token graph", async () => {
           await request(app).post("/api/app/get-token-chart").set('Cookie', cookies).send({contractAddress:"testcoin"}).expect(404);
         });
+
+        it("Should get topcoins", async () => {
+          const response = await request(app).get("/api/app/get-top-coins").set('Cookie', cookies).expect(200);
+          const numOfTopCoins = 7;
+          expect(response.body.length).toEqual(numOfTopCoins);
+          expect(response.body[0].id).toEqual("bitcoin");
+          expect(response.body[0].current_price!==undefined).toEqual(true);
+          expect(response.body[0].price_change_percentage_1h_in_currency!==undefined).toEqual(true);
+        })
+
+      //   it("Should get prediction for btc", async () => {
+      //     const validPredictions = ["strong sell", "sell", "neutral", "buy", "strong buy","test_prediction"]
+      //     const response = await request(app).get("/api/app/get-token-prediction?contractAddress=btc").set('Cookie', cookies).expect(200);
+      //     console.log(response.body)
+      //     expect(validPredictions.some((prediction) => prediction===response.body.result)).toEqual(true);
+      // });
 
       it("Should not get prediction", async () => {
         const response = await request(app).get("/api/app/get-token-prediction?contractAddress=test").set('Cookie', cookies).expect(404);
