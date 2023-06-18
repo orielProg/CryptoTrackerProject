@@ -69,7 +69,7 @@ const getNftTokens = async (retryCounter=0) => {
   const url = apiUrl + wallet + "&format=json";
   apiKeys = process.env.OPENSEA_API_KEYS.split(" ");
   try {
-    const response = await fetch(url,{headers : {"x-api-key" : apiKeys[getRandomInt(0,apiKeys.length)]}});
+    const response = await fetch(url,{headers : {"x-api-key" : apiKeys[retryCounter]}});
     const data = await response.json();
     const type = "nft";
     if (data) {
