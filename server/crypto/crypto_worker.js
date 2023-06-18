@@ -8,6 +8,12 @@ let assets = {};
 let ethDollarPrice;
 const wallet = workerData.wallet;
 
+function getRandomInt(min, max) {
+  min = Math.ceil(min);
+  max = Math.floor(max);
+  return Math.floor(Math.random() * (max - min) + min);
+}
+
 // populates the assets object with Ethereum and ERC20
 // token information associated with the provided wallet address.
 const getErc20Tokens = async (wallet) => {
@@ -58,11 +64,12 @@ const getErc20Tokens = async (wallet) => {
   }
 };
 
-const getNftTokens = async () => {
+const getNftTokens = async (retryCounter=0) => {
   const apiUrl = "https://api.opensea.io/api/v1/collections?asset_owner=";
-  const url = apiUrl + wallet + "&format=json&limit=300&offset=0";
+  const url = apiUrl + wallet + "&format=json";
+  apiKeys = process.env.OPENSEA_API_KEYS.split(" ");
   try {
-    const response = await fetch(url,{headers : {"x-api-key" : process.env.OPENSEA_API_KEY}});
+    const response = await fetch(url,{headers : {"x-api-key" : apiKeys[getRandomInt(0,apiKeys.length)]}});
     const data = await response.json();
     const type = "nft";
     if (data) {
@@ -85,7 +92,14 @@ const getNftTokens = async () => {
       });
     }
   } catch (err) {
-    console.log(err);
+    if(retryCounter < 3){
+      console.log("retrying opensea api call retry counter: ",retryCounter," error: ",err);
+      await new Promise((resolve) => setTimeout(resolve, getRandomInt(1000, 5000)));
+      getNftTokens(retryCounter+1);
+    }
+    else{
+      console.log("done retrying")
+    }
     return;
   }
 };
